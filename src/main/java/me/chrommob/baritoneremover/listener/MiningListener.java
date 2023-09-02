@@ -28,6 +28,9 @@ public class MiningListener extends SimplePacketListenerAbstract {
             return;
         }
         PlayerData pd = dataHolder.getPlayerData(event.getUser().getName());
+        if (pd == null) {
+            return;
+        }
         if (packet.getAction() == DiggingAction.START_DIGGING) {
             pd.startMining();
             return;

@@ -21,6 +21,7 @@ public class RotationListener extends SimplePacketListenerAbstract {
         WrapperPlayClientPlayerFlying packet = new WrapperPlayClientPlayerFlying(event);
         if (!packet.hasPositionChanged() && !packet.hasRotationChanged()) return;
         PlayerData pd = dataHolder.getPlayerData(event.getUser().getName());
+        if (pd == null) return;
         if (packet.hasPositionChanged() && packet.hasRotationChanged()) {
             pd.updateBoth(packet.getLocation().getPosition(), packet.getLocation().getPitch(), packet.getLocation().getYaw());
             return;

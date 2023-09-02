@@ -2,3 +2,7 @@ name: BaritoneRemover
 version: '${version}'
 main: me.chrommob.baritoneremover.BaritoneRemover
 api-version: '1.13'
+permissions:
+    br.alert:
+        description: Allows the player to receive alerts from the plugin
+        default: op

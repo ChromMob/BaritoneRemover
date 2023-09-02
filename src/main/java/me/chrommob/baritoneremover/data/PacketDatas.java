@@ -16,9 +16,6 @@ public class PacketDatas {
 
 
     public void add(PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining) {
-        if (size() > 1000) {
-            packetDatas.clear();
-        }
         PacketData packetData = new PacketData(packetDatas.size(), System.currentTimeMillis(), positionData, rotationData, mining, finishedMining);
         packetDatas.add(packetData);
     }

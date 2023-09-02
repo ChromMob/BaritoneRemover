@@ -1,8 +1,8 @@
 package me.chrommob.baritoneremover.checks.inter;
 
 import me.chrommob.baritoneremover.BaritoneRemover;
-import me.chrommob.baritoneremover.checks.impl.AutoWalk;
-import me.chrommob.baritoneremover.checks.impl.TimeBetween;
+import me.chrommob.baritoneremover.checks.impl.autowalk.AutoWalkA;
+import me.chrommob.baritoneremover.checks.impl.rotation.TimeBetweenA;
 
 import java.util.*;
 
@@ -15,8 +15,8 @@ public class Checks {
     }
 
     private void registerChecks() {
-        checks.add(AutoWalk.class);
-        checks.add(TimeBetween.class);
+        checks.add(AutoWalkA.class);
+        checks.add(TimeBetweenA.class);
     }
 
     public Set<Class<? extends Check>> getChecks() {

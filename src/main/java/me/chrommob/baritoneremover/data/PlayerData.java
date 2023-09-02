@@ -4,18 +4,18 @@ import com.github.retrooper.packetevents.util.Vector3d;
 import me.chrommob.baritoneremover.checks.inter.Check;
 import me.chrommob.baritoneremover.checks.inter.CheckType;
 import me.chrommob.baritoneremover.checks.inter.Checks;
+import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.types.PositionData;
 import me.chrommob.baritoneremover.data.types.RotationData;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class PlayerData {
     private final String name;
-    private final PacketDatas packetDataList = new PacketDatas();
+    private final boolean isBedrock;
+    private PacketDatas packetDataList = new PacketDatas();
     public PlayerData(String name, Checks checks) {
         this.name = name;
         checks.getChecks().forEach(check -> {
@@ -25,6 +25,7 @@ public class PlayerData {
                 e.printStackTrace();
             }
         });
+        isBedrock = ConfigManager.getInstance().floodgateApi() != null && ConfigManager.getInstance().floodgateApi().isFloodgatePlayer(Bukkit.getPlayer(name).getUniqueId());
     }
 
     private final Set<Check> checks = new HashSet<>();
@@ -63,11 +64,21 @@ public class PlayerData {
             return;
         }
         checks.forEach(check -> {
+            if (check.checkType() == CheckType.NONE) {
+                return;
+            }
             if (check.checkType() != updateType) {
                 return;
             }
             check.run(updateType);
         });
+        if (packetDataList.size() > 1000) {
+            packetDataList = new PacketDatas();
+        }
+    }
+
+    public boolean isBedrock() {
+        return isBedrock;
     }
 
     public PacketDatas packetDataList() {

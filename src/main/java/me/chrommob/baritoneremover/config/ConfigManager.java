@@ -5,6 +5,10 @@ import me.chrommob.baritoneremover.checks.inter.Check;
 import me.chrommob.baritoneremover.checks.inter.CheckData;
 import me.chrommob.baritoneremover.checks.inter.Checks;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.geysermc.floodgate.api.FloodgateApi;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -22,8 +26,11 @@ public class ConfigManager {
     private static ConfigManager instance;
     private final Checks checks;
     private final Map<Class<? extends Check>, ConfigData> configDataMap = new HashMap<>();
+    private Component prefix;
     private LinkedHashMap<String, Object> config;
-    private BukkitAudiences adventure;
+    private final BukkitAudiences adventure;
+    private FloodgateApi floodgateApi;
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     public BukkitAudiences adventure() {
         if (this.adventure == null) {
@@ -34,6 +41,11 @@ public class ConfigManager {
 
     public ConfigManager(BaritoneRemover pl) {
         instance = this;
+        try {
+            Class.forName("org.geysermc.floodgate.api.FloodgateApi");
+            floodgateApi = FloodgateApi.getInstance();
+        } catch (ClassNotFoundException ignored) {
+        }
         this.adventure = BukkitAudiences.create(pl);
         DumperOptions dumperOptions = new DumperOptions();
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -46,16 +58,15 @@ public class ConfigManager {
     }
 
     private void loadConfig() {
+        propagateDefault();
         try (FileReader reader = new FileReader(configFile)) {
-            config = (LinkedHashMap<String, Object>) yaml.load(reader);
+            config = merge((LinkedHashMap<String, Object>) yaml.load(reader), config);
         } catch (IOException ignored) {
-
         }
-        if (config == null) {
-            propagateDefault();
-            saveConfig();
-            return;
-        }
+        saveConfig();
+        prefix = miniMessage.deserializeOr(config.get("prefix").toString(), Component.text("[").color(NamedTextColor.WHITE)
+                        .append(Component.text("BaritoneRemover").color(NamedTextColor.RED))
+                        .append(Component.text("] ").color(NamedTextColor.WHITE)));
         Map<String, Object> configChecks = (Map<String, Object>) config.get("checks");
         configChecks.forEach((key, value) -> {
             String checkName = key.substring(0, key.length() - 1);
@@ -81,8 +92,35 @@ public class ConfigManager {
         });
     }
 
+    private LinkedHashMap<String, Object> merge(LinkedHashMap<String, Object> load, LinkedHashMap<String, Object> config) {
+        if (load == null) {
+            return config;
+        }
+        if (config == null) {
+            return load;
+        }
+        config.forEach((key, value) -> {
+            if (value instanceof LinkedHashMap) {
+                load.put(key, merge((LinkedHashMap<String, Object>) load.get(key), (LinkedHashMap<String, Object>) value));
+            } else {
+                if (!load.containsKey(key)) {
+                    load.put(key, value);
+                }
+            }
+        });
+        //Fix the oder too
+        LinkedHashMap<String, Object> newLoad = new LinkedHashMap<>();
+        config.forEach((key, value) -> {
+            if (load.containsKey(key)) {
+                newLoad.put(key, load.get(key));
+            }
+        });
+        return newLoad;
+    }
+
     private void propagateDefault() {
         config = new LinkedHashMap<>();
+        config.put("prefix", "[<red>BaritoneRemover<white>] ");
         Map<String, Object> configChecks = new LinkedHashMap<>();
         checks.getChecks().forEach(check -> {
             LinkedHashMap<String, Object> checkMap = new LinkedHashMap<>();
@@ -111,7 +149,15 @@ public class ConfigManager {
         return configDataMap.get(check);
     }
 
+    public Component prefix() {
+        return prefix;
+    }
+
     public static ConfigManager getInstance() {
         return instance;
+    }
+
+    public FloodgateApi floodgateApi() {
+        return floodgateApi;
     }
 }

@@ -45,15 +45,13 @@ public abstract class Check {
     }
 
     private void alert() {
-        ConfigManager.getInstance().adventure().permission("br.alert").sendMessage(Component.text("[").color(NamedTextColor.WHITE)
-                .append(Component.text("BaritoneRemover").color(NamedTextColor.RED))
-                .append(Component.text("] ").color(NamedTextColor.WHITE))
+        ConfigManager.getInstance().adventure().permission("br.alert").sendMessage(
+                ConfigManager.getInstance().prefix()
                 .append(Component.text("Player ").color(NamedTextColor.WHITE))
                 .append(Component.text(playerName).color(NamedTextColor.RED))
                 .append(Component.text(" has been flagged for ").color(NamedTextColor.WHITE))
                 .append(Component.text(name + " (" + identifier + ")").color(NamedTextColor.RED))
                 .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)));
-        Bukkit.getLogger().info("Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")");
     }
 
     private void punish() {
