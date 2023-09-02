@@ -1,0 +1,4 @@
+name: BaritoneRemover
+version: '${version}'
+main: me.chrommob.baritoneremover.BaritoneRemover
+api-version: '1.13'

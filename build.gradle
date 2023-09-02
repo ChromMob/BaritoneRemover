@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'me.chrommob'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        url 'https://repo.codemc.io/repository/maven-releases/'
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
+    implementation "net.kyori:adventure-platform-bukkit:4.2.0"
+    implementation 'com.github.retrooper.packetevents:spigot:2.0.0'
+    implementation 'org.bstats:bstats-bukkit:3.0.2'
+}
+
+shadowJar {
+    relocate 'io.github.retrooper.packetevents', 'me.chrommob.baritoneremover.libs.packetevents'
+    relocate 'org.bstats', 'me.chrommob.baritoneremover.libs.bstats'
+    relocate 'net.kyori', 'me.chrommob.baritoneremover.libs.kyori'
+}
+
+assemble.dependsOn(shadowJar)
+
+def targetJavaVersion = 8
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
