@@ -54,7 +54,7 @@ public class TimeBetweenB extends Check {
         long time = latest.timeStamp() - previous.timeStamp();
         float timeToRotate = (float) time / distance;
         debug("timeToRotateB: " + timeToRotate);
-        if (timeToRotate > 1) {
+        if (timeToRotate > 2) {
             return;
         }
         increaseVl(Math.round((1/timeToRotate)));

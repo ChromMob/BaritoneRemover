@@ -63,7 +63,7 @@ public class TimeBetweenA extends Check {
         float timeToRotate = (float) time / distance;
         //If the player rotated that fast, they are probably using a bot
         debug("timeToRotateA: " + timeToRotate);
-        if (timeToRotate > 1) {
+        if (timeToRotate > 2) {
             return;
         }
         increaseVl(Math.round((1/timeToRotate)));

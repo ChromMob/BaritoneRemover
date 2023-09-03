@@ -27,6 +27,8 @@ public class ConfigManager {
     private final Checks checks;
     private final Map<Class<? extends Check>, ConfigData> configDataMap = new HashMap<>();
     private Component prefix;
+    private boolean webHookEnabled;
+    private String webHookUrl;
     private LinkedHashMap<String, Object> config;
     private final BukkitAudiences adventure;
     private FloodgateApi floodgateApi;
@@ -67,6 +69,11 @@ public class ConfigManager {
         prefix = miniMessage.deserializeOr(config.get("prefix").toString(), Component.text("[").color(NamedTextColor.WHITE)
                         .append(Component.text("BaritoneRemover").color(NamedTextColor.RED))
                         .append(Component.text("] ").color(NamedTextColor.WHITE)));
+
+        Map<String, Object> webHook = (Map<String, Object>) config.get("webhook");
+        webHookEnabled = (boolean) webHook.get("enable");
+        webHookUrl = (String) webHook.get("url");
+
         Map<String, Object> configChecks = (Map<String, Object>) config.get("checks");
         configChecks.forEach((key, value) -> {
             String checkName = key.substring(0, key.length() - 1);
@@ -120,7 +127,14 @@ public class ConfigManager {
 
     private void propagateDefault() {
         config = new LinkedHashMap<>();
+
         config.put("prefix", "[<red>BaritoneRemover<white>] ");
+
+        Map<String, Object> webHook = new LinkedHashMap<>();
+        webHook.put("enable", false);
+        webHook.put("url", "https://discord.com/api/webhooks/1234567890/abcdefghijklmnopqrstuvwxyz");
+        config.put("webhook", webHook);
+
         Map<String, Object> configChecks = new LinkedHashMap<>();
         checks.getChecks().forEach(check -> {
             LinkedHashMap<String, Object> checkMap = new LinkedHashMap<>();
@@ -131,6 +145,7 @@ public class ConfigManager {
             configChecks.put(check.getAnnotation(CheckData.class).name() + check.getAnnotation(CheckData.class).identifier(), checkMap);
             configDataMap.put(check, new ConfigData(true, true, 20, "kick %player%"));
         });
+
         config.put("checks", configChecks);
     }
 
@@ -159,5 +174,13 @@ public class ConfigManager {
 
     public FloodgateApi floodgateApi() {
         return floodgateApi;
+    }
+
+    public boolean webHookEnabled() {
+        return webHookEnabled;
+    }
+
+    public String webHookUrl() {
+        return webHookUrl;
     }
 }
