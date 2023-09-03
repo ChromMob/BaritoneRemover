@@ -8,7 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 
 public abstract class Check {
-    private final CheckType checkType;
+    private CheckType checkType;
     private final String name;
     private final String identifier;
     private final String description;
@@ -23,6 +23,9 @@ public abstract class Check {
         this.identifier = annotationPresent ? this.getClass().getAnnotation(CheckData.class).identifier() : "Unknown";
         this.description = annotationPresent ? this.getClass().getAnnotation(CheckData.class).description() : "Unknown";
         this.checkType = annotationPresent ? this.getClass().getAnnotation(CheckData.class).checkType() : CheckType.NONE;
+        if (!ConfigManager.getInstance().getConfigData(this.getClass()).enable()) {
+            checkType = CheckType.NONE;
+        }
         this.punishVl = ConfigManager.getInstance().getConfigData(this.getClass()).punishVl();
         this.punishment = ConfigManager.getInstance().getConfigData(this.getClass()).punishCommand().replace("%player%", playerData.name());
         this.punish = ConfigManager.getInstance().getConfigData(this.getClass()).punish();
