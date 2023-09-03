@@ -65,7 +65,7 @@ public abstract class Check {
                 .append(Component.text(playerName).color(NamedTextColor.RED))
                 .append(Component.text(" has been flagged for ").color(NamedTextColor.WHITE))
                 .append(Component.text(name + " (" + identifier + ")").color(NamedTextColor.RED))
-                .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)));
+                .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)).hoverEvent(Component.text(description).color(NamedTextColor.AQUA)));
     }
 
     public void debug(String text) {
