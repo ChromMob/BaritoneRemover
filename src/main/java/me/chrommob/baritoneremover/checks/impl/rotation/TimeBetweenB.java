@@ -52,7 +52,7 @@ public class TimeBetweenB extends Check {
         }
         float distance = latestRotationInfo.rotationData().distance(previousRotationInfo.rotationData());
         debug("distanceB: " + distance);
-        if (distance < 3) {
+        if (distance < 3 || distance > 200) {
             return;
         }
         long time = latest.timeStamp() - previous.timeStamp();
