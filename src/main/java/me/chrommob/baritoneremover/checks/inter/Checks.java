@@ -2,7 +2,7 @@ package me.chrommob.baritoneremover.checks.inter;
 
 import me.chrommob.baritoneremover.BaritoneRemover;
 import me.chrommob.baritoneremover.checks.impl.autowalk.AutoWalkA;
-import me.chrommob.baritoneremover.checks.impl.general.Combined;
+import me.chrommob.baritoneremover.checks.impl.general.CombinedA;
 import me.chrommob.baritoneremover.checks.impl.rotation.TimeBetweenA;
 import me.chrommob.baritoneremover.checks.impl.rotation.TimeBetweenB;
 
@@ -22,7 +22,7 @@ public class Checks {
         checks.add(TimeBetweenA.class);
         checks.add(TimeBetweenB.class);
 
-        checks.add(Combined.class);
+        checks.add(CombinedA.class);
     }
 
     public Set<Class<? extends Check>> getChecks() {

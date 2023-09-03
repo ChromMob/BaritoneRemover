@@ -46,6 +46,7 @@ public abstract class Check {
         alert();
         if (currentVl >= punishVl) {
             punish();
+            currentVl = 0;
         }
     }
 
