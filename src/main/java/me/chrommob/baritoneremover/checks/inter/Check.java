@@ -46,6 +46,9 @@ public abstract class Check {
     public void increaseVl(int amount) {
         latestFlag = System.currentTimeMillis();
         currentVl += amount;
+        if (currentVl == 0) {
+            return;
+        }
         alert();
         if (currentVl >= punishVl) {
             punish();

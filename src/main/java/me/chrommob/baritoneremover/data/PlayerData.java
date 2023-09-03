@@ -8,6 +8,7 @@ import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.types.PositionData;
 import me.chrommob.baritoneremover.data.types.RotationData;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 public class PlayerData {
     private final String name;
     private final boolean isBedrock;
+    private ItemStack itemInHand;
     private boolean debug = false;
     private PacketDatas packetDataList = new PacketDatas();
     public PlayerData(String name, Checks checks) {
@@ -67,6 +69,10 @@ public class PlayerData {
         runChecks(CheckType.ANY);
     }
 
+    public void setItemInHand(ItemStack itemInHand) {
+        this.itemInHand = itemInHand;
+    }
+
     public void debug() {
         debug = !debug;
     }
@@ -96,6 +102,10 @@ public class PlayerData {
 
     public boolean isBedrock() {
         return isBedrock;
+    }
+
+    public boolean hasBlockInHand() {
+        return itemInHand != null && itemInHand.getType().isBlock();
     }
 
     public PacketDatas packetDataList() {
