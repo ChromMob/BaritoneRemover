@@ -42,19 +42,24 @@ public class AutoWalkA extends Check {
         float differencePitch = latest.differencePitch(previous);
         //If there is no difference there is no way to tell if they are auto walking
         if (differencePitch > 0) {
+            if (ticks > 0)
+                ticks--;
             return;
         }
         double distance = latest.distance(previous);
         distanceMoved += distance;
         ticks++;
         //If the player has moved less than 5 blocks, we don't want to flag them
-        if (distanceMoved < 5) {
+        if (distanceMoved < 20) {
             return;
         }
-        if (ticks < (distanceMoved - distanceMoved / 7)) {
+        if (ticks/distanceMoved < 3) {
+            debug("Ticks: " + ticks + " Distance: " + distanceMoved + " Ticks/Distance: " + ticks/distanceMoved);
+            distanceMoved = 0;
+            ticks = 0;
             return;
         }
-        increaseVl(1);
+        increaseVl(Math.round(Math.round((ticks/distanceMoved)/3)));
         distanceMoved = 0;
         ticks = 0;
     }

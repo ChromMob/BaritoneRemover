@@ -6,3 +6,6 @@ permissions:
     br.alert:
         description: Allows the player to receive alerts from the plugin
         default: op
+    br.debug:
+        description: Allows the player to receive debug messages from the plugin
+        default: op

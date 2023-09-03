@@ -28,6 +28,11 @@ public abstract class Check {
         this.punish = ConfigManager.getInstance().getConfigData(this.getClass()).punish();
         this.playerData = playerData;
         this.playerName = playerData.name();
+        Bukkit.getScheduler().runTaskTimer(BaritoneRemover.getPlugin(BaritoneRemover.class), () -> {
+            if (System.currentTimeMillis() - latestFlag > 1000 * 20) {
+                currentVl = currentVl > 0 ? currentVl - 1 : 0;
+            }
+        }, 0, 20 * 10);
     }
 
     private double currentVl = 0;
@@ -52,6 +57,15 @@ public abstract class Check {
                 .append(Component.text(" has been flagged for ").color(NamedTextColor.WHITE))
                 .append(Component.text(name + " (" + identifier + ")").color(NamedTextColor.RED))
                 .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)));
+    }
+
+    public void debug(String text) {
+        if (playerData.isDebug()) {
+            ConfigManager.getInstance().adventure().player(Bukkit.getPlayer(playerName)).sendMessage(
+                    ConfigManager.getInstance().prefix()
+                            .append(Component.text("Debug: ").color(NamedTextColor.WHITE))
+                            .append(Component.text(text).color(NamedTextColor.RED)));
+        }
     }
 
     private void punish() {

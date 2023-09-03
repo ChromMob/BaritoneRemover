@@ -15,8 +15,8 @@ public class PacketDatas {
     }
 
 
-    public void add(PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining) {
-        PacketData packetData = new PacketData(packetDatas.size(), System.currentTimeMillis(), positionData, rotationData, mining, finishedMining);
+    public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock) {
+        PacketData packetData = new PacketData(checkType, packetDatas.size(), System.currentTimeMillis(), positionData, rotationData, mining, finishedMining, placedBlock);
         packetDatas.add(packetData);
     }
 

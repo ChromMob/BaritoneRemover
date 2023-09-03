@@ -15,6 +15,7 @@ import java.util.Set;
 public class PlayerData {
     private final String name;
     private final boolean isBedrock;
+    private boolean debug = false;
     private PacketDatas packetDataList = new PacketDatas();
     public PlayerData(String name, Checks checks) {
         this.name = name;
@@ -31,28 +32,37 @@ public class PlayerData {
     private final Set<Check> checks = new HashSet<>();
 
     public void updatePosition(Vector3d location) {
-        packetDataList.add(new PositionData(location), null, false, false);
+        packetDataList.add(CheckType.POSITION, new PositionData(location), null, false, false, false);
         runChecks(CheckType.POSITION);
     }
 
     public void updateRotation(float pitch, float yaw) {
-        packetDataList.add(null, new RotationData(pitch, yaw), false, false);
+        packetDataList.add(CheckType.ROTATION, null, new RotationData(pitch, yaw), false, false, false);
         runChecks(CheckType.ROTATION);
     }
 
     public void updateBoth(Vector3d position, float pitch, float yaw) {
-        packetDataList.add(new PositionData(position), new RotationData(pitch, yaw), false, false);
+        packetDataList.add(CheckType.FLYING, new PositionData(position), new RotationData(pitch, yaw), false, false, false);
         runChecks(CheckType.FLYING);
     }
 
     public void startMining() {
-        packetDataList.add(null, null, true, false);
+        packetDataList.add(CheckType.MINING, null, null, true, false, false);
         runChecks(CheckType.MINING);
     }
 
     public void finishMining() {
-        packetDataList.add(null, null, false, true);
+        packetDataList.add(CheckType.MINED, null, null, false, true, false);
         runChecks(CheckType.MINED);
+    }
+
+    public void blockPlace() {
+        packetDataList.add(CheckType.PLACE, null, null, false, false, true);
+        runChecks(CheckType.PLACE);
+    }
+
+    public void debug() {
+        debug = !debug;
     }
 
     public String name() {
@@ -64,9 +74,6 @@ public class PlayerData {
             return;
         }
         checks.forEach(check -> {
-            if (check.checkType() == CheckType.NONE) {
-                return;
-            }
             if (check.checkType() != updateType) {
                 return;
             }
@@ -75,6 +82,10 @@ public class PlayerData {
         if (packetDataList.size() > 1000) {
             packetDataList = new PacketDatas();
         }
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
     public boolean isBedrock() {

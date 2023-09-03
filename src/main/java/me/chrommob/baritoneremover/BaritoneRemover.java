@@ -1,16 +1,19 @@
 package me.chrommob.baritoneremover;
 
+import co.aikar.commands.PaperCommandManager;
 import com.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import me.chrommob.baritoneremover.checks.inter.Checks;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.DataHolder;
 import me.chrommob.baritoneremover.data.PacketDatas;
+import me.chrommob.baritoneremover.listener.BlockPlaceListener;
 import me.chrommob.baritoneremover.listener.DisconnectListener;
 import me.chrommob.baritoneremover.listener.MiningListener;
 import me.chrommob.baritoneremover.listener.RotationListener;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -38,13 +41,19 @@ public final class BaritoneRemover extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        PaperCommandManager commandManager = new PaperCommandManager(this);
+
         new Metrics(this, 19704);
         dataHolder = new DataHolder(this);
         checks = new Checks(this);
         configManager = new ConfigManager(this);
+
+        commandManager.registerCommand(new me.chrommob.baritoneremover.commands.DebugCommand(this));
+
         PacketEvents.getAPI().getEventManager().registerListener(new RotationListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new DisconnectListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new MiningListener(this));
+        PacketEvents.getAPI().getEventManager().registerListener(new BlockPlaceListener(this));
         PacketEvents.getAPI().init();
     }
 

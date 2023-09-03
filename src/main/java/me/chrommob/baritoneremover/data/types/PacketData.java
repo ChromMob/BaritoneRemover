@@ -5,20 +5,24 @@ import me.chrommob.baritoneremover.checks.inter.CheckType;
 import java.util.Objects;
 
 public final class PacketData {
+    private final CheckType checkType;
     private final int index;
     private final long timeStamp;
     private final PositionData positionData;
     private final RotationData rotationData;
     private final boolean mining;
     private final boolean finishedMining;
+    private final boolean placedBlock;
 
-    public PacketData(int index, long timeStamp, PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining) {
+    public PacketData(CheckType checkType ,int index, long timeStamp, PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock) {
+        this.checkType = checkType;
         this.index = index;
         this.timeStamp = timeStamp;
         this.positionData = positionData;
         this.rotationData = rotationData;
         this.mining = mining;
         this.finishedMining = finishedMining;
+        this.placedBlock = placedBlock;
     }
 
     public int index() {
@@ -45,6 +49,11 @@ public final class PacketData {
         return finishedMining;
     }
 
+    public boolean placedBlock(){
+        return placedBlock;
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
@@ -55,7 +64,8 @@ public final class PacketData {
                 Objects.equals(this.positionData, that.positionData) &&
                 Objects.equals(this.rotationData, that.rotationData) &&
                 this.mining == that.mining &&
-                this.finishedMining == that.finishedMining;
+                this.finishedMining == that.finishedMining &&
+                this.placedBlock == that.placedBlock;
     }
 
     @Override
@@ -91,18 +101,6 @@ public final class PacketData {
     }
 
     public CheckType checkType() {
-        if (positionData == null && rotationData != null) {
-            return CheckType.ROTATION;
-        } else if (positionData != null && rotationData == null) {
-            return CheckType.POSITION;
-        } else if (positionData != null) {
-            return CheckType.FLYING;
-        } else if (mining) {
-            return CheckType.MINING;
-        } else if (finishedMining) {
-            return CheckType.MINED;
-        } else {
-            return CheckType.NONE;
-        }
+        return checkType;
     }
 }

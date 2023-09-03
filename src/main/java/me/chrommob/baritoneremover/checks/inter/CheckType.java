@@ -6,5 +6,5 @@ public enum CheckType {
     FLYING,
     MINING,
     MINED,
-    NONE
+    PLACE, NONE
 }
