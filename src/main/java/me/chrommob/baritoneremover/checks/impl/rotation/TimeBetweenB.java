@@ -51,6 +51,10 @@ public class TimeBetweenB extends Check {
             previousRotationInfo = previousRotation.timeStamp() > previousFlying.timeStamp() ? previousRotation : previousFlying;
         }
         float distance = latestRotationInfo.rotationData().distance(previousRotationInfo.rotationData());
+        debug("distanceB: " + distance);
+        if (distance < 3) {
+            return;
+        }
         long time = latest.timeStamp() - previous.timeStamp();
         float timeToRotate = (float) time / distance;
         debug("timeToRotateB: " + timeToRotate);

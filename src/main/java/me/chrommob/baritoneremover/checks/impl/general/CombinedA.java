@@ -8,7 +8,7 @@ import me.chrommob.baritoneremover.data.PlayerData;
 import java.util.HashSet;
 import java.util.Set;
 
-@CheckData(name = "CombinedA", identifier = "A", description = "Checks for combined violations", checkType = CheckType.ANY)
+@CheckData(name = "Combined", identifier = "A", description = "Checks for combined violations", checkType = CheckType.ANY)
 public class CombinedA extends Check {
 
     public CombinedA(PlayerData playerData) {
