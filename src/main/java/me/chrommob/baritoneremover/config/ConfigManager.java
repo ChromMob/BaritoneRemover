@@ -57,7 +57,7 @@ public class ConfigManager {
         loadConfig();
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         propagateDefault();
         try (FileReader reader = new FileReader(configFile)) {
             config = merge((LinkedHashMap<String, Object>) yaml.load(reader), config);

@@ -35,7 +35,7 @@ public abstract class Check {
         }, 0, 20 * 10);
     }
 
-    private double currentVl = 0;
+    private int currentVl = 0;
     private long latestFlag = System.currentTimeMillis();
 
     public abstract void run(CheckType updateType);
@@ -47,6 +47,14 @@ public abstract class Check {
         if (currentVl >= punishVl) {
             punish();
         }
+    }
+
+    public void resetVl() {
+        currentVl = 0;
+    }
+
+    public int punishVl() {
+        return punishVl;
     }
 
     private void alert() {
@@ -77,6 +85,10 @@ public abstract class Check {
 
     public CheckType checkType() {
         return checkType;
+    }
+
+    public int currentVl() {
+        return currentVl;
     }
 }
 

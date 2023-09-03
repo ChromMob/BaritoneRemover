@@ -4,6 +4,8 @@ import co.aikar.commands.PaperCommandManager;
 import com.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import me.chrommob.baritoneremover.checks.inter.Checks;
+import me.chrommob.baritoneremover.commands.DebugCommand;
+import me.chrommob.baritoneremover.commands.ReloadCommand;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.DataHolder;
 import me.chrommob.baritoneremover.data.PacketDatas;
@@ -48,13 +50,19 @@ public final class BaritoneRemover extends JavaPlugin {
         checks = new Checks(this);
         configManager = new ConfigManager(this);
 
-        commandManager.registerCommand(new me.chrommob.baritoneremover.commands.DebugCommand(this));
+        commandManager.registerCommand(new DebugCommand(this));
+        commandManager.registerCommand(new ReloadCommand(this));
 
         PacketEvents.getAPI().getEventManager().registerListener(new RotationListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new DisconnectListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new MiningListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new BlockPlaceListener(this));
         PacketEvents.getAPI().init();
+    }
+
+    public void reload() {
+        configManager.loadConfig();
+        dataHolder.clear();
     }
 
     @Override

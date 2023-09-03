@@ -34,31 +34,37 @@ public class PlayerData {
     public void updatePosition(Vector3d location) {
         packetDataList.add(CheckType.POSITION, new PositionData(location), null, false, false, false);
         runChecks(CheckType.POSITION);
+        runChecks(CheckType.ANY);
     }
 
     public void updateRotation(float pitch, float yaw) {
         packetDataList.add(CheckType.ROTATION, null, new RotationData(pitch, yaw), false, false, false);
         runChecks(CheckType.ROTATION);
+        runChecks(CheckType.ANY);
     }
 
     public void updateBoth(Vector3d position, float pitch, float yaw) {
         packetDataList.add(CheckType.FLYING, new PositionData(position), new RotationData(pitch, yaw), false, false, false);
         runChecks(CheckType.FLYING);
+        runChecks(CheckType.ANY);
     }
 
     public void startMining() {
         packetDataList.add(CheckType.MINING, null, null, true, false, false);
         runChecks(CheckType.MINING);
+        runChecks(CheckType.ANY);
     }
 
     public void finishMining() {
         packetDataList.add(CheckType.MINED, null, null, false, true, false);
         runChecks(CheckType.MINED);
+        runChecks(CheckType.ANY);
     }
 
     public void blockPlace() {
         packetDataList.add(CheckType.PLACE, null, null, false, false, true);
         runChecks(CheckType.PLACE);
+        runChecks(CheckType.ANY);
     }
 
     public void debug() {
@@ -94,5 +100,9 @@ public class PlayerData {
 
     public PacketDatas packetDataList() {
         return packetDataList;
+    }
+
+    public Set<Check> checks() {
+        return checks;
     }
 }

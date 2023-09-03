@@ -20,4 +20,8 @@ public class DataHolder {
     public void removePlayerData(String name) {
         playerDataMap.remove(name);
     }
+
+    public void clear() {
+        playerDataMap.clear();
+    }
 }

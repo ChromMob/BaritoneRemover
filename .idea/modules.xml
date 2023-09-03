@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/BaritoneRemover.main.iml" filepath="$PROJECT_DIR$/.idea/modules/BaritoneRemover.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/BaritoneRemover.test.iml" filepath="$PROJECT_DIR$/.idea/modules/BaritoneRemover.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/me.chrommob.BaritoneRemover.main.iml" filepath="$PROJECT_DIR$/.idea/modules/me.chrommob.BaritoneRemover.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/me.chrommob.BaritoneRemover.test.iml" filepath="$PROJECT_DIR$/.idea/modules/me.chrommob.BaritoneRemover.test.iml" />
     </modules>
   </component>
 </project>
