@@ -13,6 +13,7 @@ import me.chrommob.baritoneremover.listener.BlockPlaceListener;
 import me.chrommob.baritoneremover.listener.DisconnectListener;
 import me.chrommob.baritoneremover.listener.MiningListener;
 import me.chrommob.baritoneremover.listener.RotationListener;
+import me.chrommob.baritoneremover.webhook.Sender;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.block.Block;

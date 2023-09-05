@@ -4,6 +4,7 @@ import me.chrommob.baritoneremover.BaritoneRemover;
 import me.chrommob.baritoneremover.checks.inter.Check;
 import me.chrommob.baritoneremover.checks.inter.CheckData;
 import me.chrommob.baritoneremover.checks.inter.Checks;
+import me.chrommob.baritoneremover.webhook.Sender;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -25,6 +26,7 @@ public class ConfigManager {
     private final Yaml yaml;
     private static ConfigManager instance;
     private final Checks checks;
+    private final Sender sender = new Sender(this);
     private final Map<Class<? extends Check>, ConfigData> configDataMap = new HashMap<>();
     private Component prefix;
     private boolean webHookEnabled;
@@ -97,6 +99,7 @@ public class ConfigManager {
             String punishCommand = (String) checkMap.get("punish-command");
             configDataMap.put(checkClass, new ConfigData(enable, punish, punishVl, punishCommand));
         });
+        sender.load();
     }
 
     private LinkedHashMap<String, Object> merge(LinkedHashMap<String, Object> load, LinkedHashMap<String, Object> config) {
@@ -182,5 +185,9 @@ public class ConfigManager {
 
     public String webHookUrl() {
         return webHookUrl;
+    }
+
+    public Sender sender() {
+        return sender;
     }
 }

@@ -76,27 +76,8 @@ public abstract class Check {
                 .append(Component.text(" has been flagged for ").color(NamedTextColor.WHITE))
                 .append(Component.text(name + " (" + identifier + ")").color(NamedTextColor.RED))
                 .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)).hoverEvent(Component.text(description).color(NamedTextColor.AQUA)));
-        boolean webHookEnabled = ConfigManager.getInstance().webHookEnabled();
-        if (!webHookEnabled) {
-            return;
-        }
-        String webHookUrl = ConfigManager.getInstance().webHookUrl();
-        Bukkit.getScheduler().runTaskAsynchronously(BaritoneRemover.getPlugin(BaritoneRemover.class), () -> {
-                try {
-                    URLConnection connection = new URL(webHookUrl).openConnection();
-                    connection.setDoOutput(true);
-                    ((HttpsURLConnection) connection).setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-                    String json = "{\"content\": \"Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")\"}";
-                    OutputStream stream = connection.getOutputStream();
-                    byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
-                    stream.write(bytes, 0, bytes.length);
-                    stream.close();
-                    connection.getInputStream().close();
-                } catch (IOException ignored) {
-                }
-        });
+        String json = "{\"content\": \"Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")\"}";
+        ConfigManager.getInstance().sender().send(json);
     }
 
     public void debug(String text) {
