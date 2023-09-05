@@ -92,6 +92,11 @@ public class PlayerData {
             check.run(updateType);
         });
         if (packetDataList.size() > 1000) {
+            checks.forEach(check -> {
+                if (check.checkType() == CheckType.AGGREGATE) {
+                    check.run(updateType);
+                }
+            });
             packetDataList = new PacketDatas();
         }
     }

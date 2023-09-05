@@ -71,4 +71,14 @@ public class PacketDatas {
         }
         return null;
     }
+
+    public List<PacketData> getAllType(CheckType checkType, CheckType checkType2) {
+        List<PacketData> packetDataList = new ArrayList<>();
+        for (PacketData packetData : packetDatas) {
+            if (packetData.checkType() == checkType || packetData.checkType() == checkType2) {
+                packetDataList.add(packetData);
+            }
+        }
+        return packetDataList;
+    }
 }

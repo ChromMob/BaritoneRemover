@@ -67,11 +67,8 @@ public abstract class Check {
         currentVl = 0;
     }
 
-    public int punishVl() {
-        return punishVl;
-    }
-
     private void alert() {
+        int currentVl = this.currentVl;
         ConfigManager.getInstance().adventure().permission("br.alert").sendMessage(
                 ConfigManager.getInstance().prefix()
                 .append(Component.text("Player ").color(NamedTextColor.WHITE))
@@ -124,6 +121,10 @@ public abstract class Check {
 
     public int currentVl() {
         return currentVl;
+    }
+
+    public int punishVl() {
+        return punishVl;
     }
 }
 

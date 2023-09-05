@@ -8,5 +8,6 @@ public enum CheckType {
     MINED,
     PLACE,
     ANY,
+    AGGREGATE,
     NONE
 }

@@ -56,6 +56,10 @@ public class TimeBetweenB extends Check {
             return;
         }
         long time = latest.timeStamp() - previous.timeStamp();
+        if (time <= 0) {
+            debug("timeB is lower or equal to 0 this shouldn't happen (" + time + ")");
+            return;
+        }
         float timeToRotate = (float) time / distance;
         debug("timeToRotateB: " + timeToRotate);
         if (timeToRotate > 2) {

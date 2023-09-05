@@ -59,7 +59,14 @@ public class TimeBetweenA extends Check {
             previousRotationInfo = previousRotation.timeStamp() > previousFlying.timeStamp() ? previousRotation : previousFlying;
         }
         float distance = latestRotationInfo.rotationData().distance(previousRotationInfo.rotationData());
+        if (distance == 0) {
+            return;
+        }
         long time = latest.timeStamp() - previous.timeStamp();
+        if (time <= 0) {
+            debug("timeA is lower or equal to 0 this shouldn't happen (" + time + ")");
+            return;
+        }
         float timeToRotate = (float) time / distance;
         //If the player rotated that fast, they are probably using a bot
         debug("timeToRotateA: " + timeToRotate);
