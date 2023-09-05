@@ -1,4 +1,4 @@
-package me.chrommob.baritoneremover.checks.impl.autowalk;
+package me.chrommob.baritoneremover.checks.impl.movement;
 
 import me.chrommob.baritoneremover.checks.inter.Check;
 import me.chrommob.baritoneremover.checks.inter.CheckData;

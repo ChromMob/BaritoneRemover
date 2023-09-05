@@ -1,10 +1,12 @@
 package me.chrommob.baritoneremover.checks.inter;
 
 import me.chrommob.baritoneremover.BaritoneRemover;
-import me.chrommob.baritoneremover.checks.impl.autowalk.AutoWalkA;
+import me.chrommob.baritoneremover.checks.impl.movement.AutoWalkA;
 import me.chrommob.baritoneremover.checks.impl.general.CombinedA;
 import me.chrommob.baritoneremover.checks.impl.movement.RepeatedB;
+import me.chrommob.baritoneremover.checks.impl.movement.RepeatedD;
 import me.chrommob.baritoneremover.checks.impl.rotation.RepeatedA;
+import me.chrommob.baritoneremover.checks.impl.rotation.RepeatedC;
 import me.chrommob.baritoneremover.checks.impl.rotation.TimeBetweenA;
 import me.chrommob.baritoneremover.checks.impl.rotation.TimeBetweenB;
 
@@ -21,8 +23,10 @@ public class Checks {
     private void registerChecks() {
         checks.add(AutoWalkA.class);
         checks.add(RepeatedB.class);
+        checks.add(RepeatedD.class);
 
         checks.add(RepeatedA.class);
+        checks.add(RepeatedC.class);
         checks.add(TimeBetweenA.class);
         checks.add(TimeBetweenB.class);
 

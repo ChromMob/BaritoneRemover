@@ -3,6 +3,7 @@ package me.chrommob.baritoneremover.checks.impl.movement;
 import me.chrommob.baritoneremover.checks.inter.Check;
 import me.chrommob.baritoneremover.checks.inter.CheckData;
 import me.chrommob.baritoneremover.checks.inter.CheckType;
+import me.chrommob.baritoneremover.checks.inter.Utils;
 import me.chrommob.baritoneremover.data.PlayerData;
 import me.chrommob.baritoneremover.data.types.PacketData;
 import me.chrommob.baritoneremover.data.types.PositionData;
@@ -43,7 +44,7 @@ public class RepeatedB extends Check {
             if (indexes.size() < 2) {
                 continue;
             }
-            List<Integer> pattern = computePattern(indexes);
+            List<Integer> pattern = Utils.computePattern(indexes);
 
             if (!patternToPositionDataMap.containsKey(pattern)) {
                 patternToPositionDataMap.put(pattern, new ArrayList<>());
@@ -64,19 +65,9 @@ public class RepeatedB extends Check {
                 maxPatternRepeats = rotationDataList.size();
             }
         }
-        debug("totalBlocks: " + maxPatternLength * maxPatternRepeats);
-        //increaseVl(punishVl());
-    }
-
-    private List<Integer> computePattern(List<Integer> indexes) {
-        List<Integer> pattern = new ArrayList<>();
-        int diff = indexes.get(1) - indexes.get(0);
-
-        for (int i = 1; i < indexes.size(); i++) {
-            pattern.add(indexes.get(i) - indexes.get(i - 1));
+        debug("totalBlocks: " + maxPatternLength * maxPatternRepeats + " maxPatternLength: " + maxPatternLength + " maxPatternRepeats: " + maxPatternRepeats);
+        if (maxPatternLength * maxPatternRepeats > 200) {
+            increaseVl(punishVl());
         }
-
-        pattern.add(0, diff); // Add the initial difference as the first element
-        return pattern;
     }
 }

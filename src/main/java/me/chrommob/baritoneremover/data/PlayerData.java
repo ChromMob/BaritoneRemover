@@ -91,12 +91,17 @@ public class PlayerData {
             }
             check.run(updateType);
         });
-        if (packetDataList.size() > 1000) {
+        if (packetDataList.size() == 0) {
+            return;
+        }
+        if (packetDataList.size() % 100 == 0) {
             checks.forEach(check -> {
                 if (check.checkType() == CheckType.AGGREGATE) {
                     check.run(updateType);
                 }
             });
+        }
+        if (packetDataList.size() > 1000) {
             packetDataList = new PacketDatas();
         }
     }

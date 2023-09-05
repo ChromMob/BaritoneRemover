@@ -25,6 +25,18 @@ public class PositionData {
         return location;
     }
 
+    public double differenceX(PositionData positionData) {
+        return Math.abs(x - positionData.x);
+    }
+
+    public double differenceY(PositionData positionData) {
+        return Math.abs(y - positionData.y);
+    }
+
+    public double differenceZ(PositionData positionData) {
+        return Math.abs(z - positionData.z);
+    }
+
     public double x() {
         return x;
     }
