@@ -7,13 +7,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-
 public abstract class Check {
     private CheckType checkType;
     private final String name;
@@ -77,7 +70,7 @@ public abstract class Check {
                 .append(Component.text(name + " (" + identifier + ")").color(NamedTextColor.RED))
                 .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)).hoverEvent(Component.text(description).color(NamedTextColor.AQUA)));
         String json = "{\"content\": \"Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")\"}";
-        ConfigManager.getInstance().sender().send(json);
+        ConfigManager.getInstance().sender().add(json, playerName,currentVl >= punishVl);
     }
 
     public void debug(String text) {

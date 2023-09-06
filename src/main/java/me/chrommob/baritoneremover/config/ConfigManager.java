@@ -190,4 +190,8 @@ public class ConfigManager {
     public Sender sender() {
         return sender;
     }
+
+    public BaritoneRemover plugin() {
+        return BaritoneRemover.getPlugin(BaritoneRemover.class);
+    }
 }
