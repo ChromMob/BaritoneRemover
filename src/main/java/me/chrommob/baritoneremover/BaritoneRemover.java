@@ -8,13 +8,10 @@ import me.chrommob.baritoneremover.commands.DebugCommand;
 import me.chrommob.baritoneremover.commands.ReloadCommand;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.DataHolder;
-import me.chrommob.baritoneremover.data.PacketDatas;
 import me.chrommob.baritoneremover.listener.BlockPlaceListener;
 import me.chrommob.baritoneremover.listener.DisconnectListener;
 import me.chrommob.baritoneremover.listener.MiningListener;
 import me.chrommob.baritoneremover.listener.RotationListener;
-import me.chrommob.baritoneremover.webhook.Sender;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,10 +51,11 @@ public final class BaritoneRemover extends JavaPlugin {
         commandManager.registerCommand(new DebugCommand(this));
         commandManager.registerCommand(new ReloadCommand(this));
 
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
+
         PacketEvents.getAPI().getEventManager().registerListener(new RotationListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new DisconnectListener(this));
         PacketEvents.getAPI().getEventManager().registerListener(new MiningListener(this));
-        PacketEvents.getAPI().getEventManager().registerListener(new BlockPlaceListener(this));
         PacketEvents.getAPI().init();
     }
 

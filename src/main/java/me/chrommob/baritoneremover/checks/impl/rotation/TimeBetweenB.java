@@ -16,9 +16,6 @@ public class TimeBetweenB extends Check {
     @Override
     public void run(CheckType updateType) {
         PacketDatas packetDatas = playerData.packetDataList();
-        if (!playerData.hasBlockInHand()) {
-            return;
-        }
         if (packetDatas.size(checkType()) < 2) {
             return;
         }

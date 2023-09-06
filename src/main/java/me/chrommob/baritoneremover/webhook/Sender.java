@@ -59,7 +59,8 @@ public class Sender {
             connection.disconnect();
 
             Map<String, List<String>> map = connection.getHeaderFields();
-            remaining = Integer.parseInt(map.get("X-RateLimit-Remaining").get(0));
+            if (map.containsKey("X-RateLimit-Remaining"))
+                remaining = Integer.parseInt(map.get("X-RateLimit-Remaining").get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
