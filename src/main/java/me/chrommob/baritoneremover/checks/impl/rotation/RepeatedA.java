@@ -10,7 +10,7 @@ import me.chrommob.baritoneremover.data.types.RotationData;
 
 import java.util.*;
 
-@CheckData(name = "RepeatedRotation", identifier = "A", checkType = CheckType.AGGREGATE, description = "Checks if the player is rotating in a repeated sequence")
+@CheckData(name = "Repeated", identifier = "A", checkType = CheckType.AGGREGATE, description = "Checks if the player is rotating in a repeated sequence")
 public class RepeatedA extends Check {
 
     public RepeatedA(PlayerData playerData) {

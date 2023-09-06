@@ -125,6 +125,14 @@ public class ConfigManager {
                 newLoad.put(key, load.get(key));
             }
         });
+        //Remove keys that are not in the default config checking for nested too
+        load.forEach((key, value) -> {
+            if (!config.containsKey(key)) {
+                newLoad.put(key, value);
+            } else if (value instanceof LinkedHashMap) {
+                newLoad.put(key, merge((LinkedHashMap<String, Object>) value, (LinkedHashMap<String, Object>) config.get(key)));
+            }
+        });
         return newLoad;
     }
 
