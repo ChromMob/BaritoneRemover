@@ -81,7 +81,7 @@ public abstract class Check {
     }
 
     public void debug(String text) {
-        String message = "Debug: " + text;
+        String message = "Debug: " + playerName + " " + name + " (" + identifier + ") " + text;
         ConfigManager.getInstance().appendDebug(message);
         if (playerData.isDebug()) {
             ConfigManager.getInstance().adventure().player(Bukkit.getPlayer(playerName)).sendMessage(
