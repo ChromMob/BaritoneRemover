@@ -17,12 +17,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ConfigManager {
     private final File configFile;
+    private File debugFile;
     private final Yaml yaml;
     private static ConfigManager instance;
     private final Checks checks;
@@ -57,8 +57,30 @@ public class ConfigManager {
         dumperOptions.setPrettyFlow(true);
         yaml = new Yaml(dumperOptions);
         configFile = pl.configFile();
+
         this.checks = pl.checks();
+        getCurrentDebugFile();
         loadConfig();
+    }
+
+    private void getCurrentDebugFile() {
+        File temp;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-");
+        Date currentDate = new Date();
+        String formattedDate = dateFormat.format(currentDate);
+        int index = 1;
+        temp = new File(plugin().debugFolder(), formattedDate + index + ".log");
+        while (temp.exists()) {
+            index++;
+            temp = new File(plugin().debugFolder(), formattedDate + index + ".log");
+        }
+        debugFile = temp;
+        try {
+            debugFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        appendDebug("BaritoneRemover successfully loaded!");
     }
 
     public void loadConfig() {
@@ -148,6 +170,9 @@ public class ConfigManager {
 
         Map<String, Object> configChecks = new LinkedHashMap<>();
         checks.getChecks().forEach(check -> {
+            if (check.getAnnotation(CheckData.class).hidden()) {
+                return;
+            }
             LinkedHashMap<String, Object> checkMap = new LinkedHashMap<>();
             checkMap.put("enable", true);
             checkMap.put("punish", true);
@@ -165,6 +190,24 @@ public class ConfigManager {
         try {
             FileWriter writer = new FileWriter(configFile);
             writer.write(configString);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void appendDebug(String message) {
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd-").format(new Date());
+        if (!debugFile.getName().startsWith(formattedDate)) {
+            getCurrentDebugFile();
+        }
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String formattedTime = dateFormat.format(date);
+        message = "[" + formattedTime + "] " + message;
+        try {
+            FileWriter writer = new FileWriter(debugFile, true);
+            writer.write(message + "\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

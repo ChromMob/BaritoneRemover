@@ -21,6 +21,9 @@ public class RepeatedC extends Check {
 
     @Override
     public void run(CheckType updateType) {
+        if (playerData.isCinematic()) {
+            return;
+        }
         List<PacketData> packetDatas = playerData.packetDataList().getAllType(CheckType.FLYING, CheckType.ROTATION);
         if (packetDatas.size() < 2) {
             return;

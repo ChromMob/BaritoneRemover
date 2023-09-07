@@ -17,6 +17,7 @@ public abstract class Check {
     private final String playerName;
     private final boolean punish;
     private final String punishment;
+    private final boolean hidden;
     public Check(PlayerData playerData) {
         boolean annotationPresent = this.getClass().isAnnotationPresent(CheckData.class);
         this.name = annotationPresent ? this.getClass().getAnnotation(CheckData.class).name() : "Unknown";
@@ -26,6 +27,7 @@ public abstract class Check {
         if (!ConfigManager.getInstance().getConfigData(this.getClass()).enable()) {
             checkType = CheckType.NONE;
         }
+        this.hidden = annotationPresent && this.getClass().getAnnotation(CheckData.class).hidden();
         this.punishVl = ConfigManager.getInstance().getConfigData(this.getClass()).punishVl();
         this.punishment = ConfigManager.getInstance().getConfigData(this.getClass()).punishCommand().replace("%player%", playerData.name());
         this.punish = ConfigManager.getInstance().getConfigData(this.getClass()).punish();
@@ -44,6 +46,9 @@ public abstract class Check {
     public abstract void run(CheckType updateType);
 
     public void increaseVl(int amount) {
+        if (hidden) {
+            return;
+        }
         latestFlag = System.currentTimeMillis();
         currentVl += amount;
         if (currentVl == 0) {
@@ -62,6 +67,8 @@ public abstract class Check {
 
     private void alert() {
         int currentVl = this.currentVl;
+        String message = "Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")";
+        ConfigManager.getInstance().appendDebug(message);
         ConfigManager.getInstance().adventure().permission("br.alert").sendMessage(
                 ConfigManager.getInstance().prefix()
                 .append(Component.text("Player ").color(NamedTextColor.WHITE))
@@ -74,6 +81,8 @@ public abstract class Check {
     }
 
     public void debug(String text) {
+        String message = "Debug: " + text;
+        ConfigManager.getInstance().appendDebug(message);
         if (playerData.isDebug()) {
             ConfigManager.getInstance().adventure().player(Bukkit.getPlayer(playerName)).sendMessage(
                     ConfigManager.getInstance().prefix()

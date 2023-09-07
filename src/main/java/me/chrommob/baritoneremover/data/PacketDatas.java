@@ -37,6 +37,15 @@ public class PacketDatas {
         return null;
     }
 
+    public PacketData getLatest(CheckType checkType, CheckType checkType2) {
+        for (int i = packetDatas.size() - 1; i >= 0; i--) {
+            PacketData packetData = packetDatas.get(i);
+            if (packetData.checkType() == checkType || packetData.checkType() == checkType2) {
+                return packetData;
+            }
+        }
+        return null;
+    }
     public PacketData get(int index) {
         return packetDatas.get(index);
     }
@@ -66,6 +75,16 @@ public class PacketDatas {
         for (int i = latest.index() - 1; i >= 0; i--) {
             PacketData packetData = packetDatas.get(i);
             if (packetData.checkType() == checkType) {
+                return packetData;
+            }
+        }
+        return null;
+    }
+
+    public PacketData getPrevious(PacketData latest, CheckType checkType, CheckType checkType2) {
+        for (int i = latest.index() - 1; i >= 0; i--) {
+            PacketData packetData = packetDatas.get(i);
+            if (packetData.checkType() == checkType || packetData.checkType() == checkType2) {
                 return packetData;
             }
         }

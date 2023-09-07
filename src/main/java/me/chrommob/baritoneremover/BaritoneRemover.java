@@ -23,13 +23,18 @@ public final class BaritoneRemover extends JavaPlugin {
     private Checks checks;
     private ConfigManager configManager;
     private File configFile;
+    private File debugFolder;
 
     @Override
     public void onLoad() {
         File dataFolder = getDataFolder();
         configFile = new File(dataFolder, "config.yml");
+        debugFolder = new File(dataFolder, "debug");
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
+        }
+        if (!debugFolder.exists()) {
+            debugFolder.mkdirs();
         }
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         //Are all listeners read only?
@@ -80,5 +85,10 @@ public final class BaritoneRemover extends JavaPlugin {
 
     public File configFile() {
         return configFile;
+    }
+
+
+    public File debugFolder() {
+        return debugFolder;
     }
 }

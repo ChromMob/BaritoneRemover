@@ -61,6 +61,10 @@ public class Sender {
             Map<String, List<String>> map = connection.getHeaderFields();
             if (map.containsKey("X-RateLimit-Remaining"))
                 remaining = Integer.parseInt(map.get("X-RateLimit-Remaining").get(0));
+            else remaining = -1;
+            if (map.containsKey("X-RateLimit-Reset"))
+                remainingReset = Long.parseLong(map.get("X-RateLimit-Reset").get(0)) * 1000;
+            else remainingReset = System.currentTimeMillis();
         } catch (Exception e) {
             e.printStackTrace();
         }

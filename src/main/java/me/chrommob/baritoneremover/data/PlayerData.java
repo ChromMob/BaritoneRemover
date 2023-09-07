@@ -16,6 +16,7 @@ public class PlayerData {
     private final String name;
     private final boolean isBedrock;
     private boolean debug = false;
+    private boolean isCinematic = false;
     private PacketDatas packetDataList = new PacketDatas();
     public PlayerData(String name, Checks checks) {
         this.name = name;
@@ -116,5 +117,13 @@ public class PlayerData {
 
     public Set<Check> checks() {
         return checks;
+    }
+
+    public void setCinematic(boolean cinematic) {
+        isCinematic = cinematic;
+    }
+
+    public boolean isCinematic() {
+        return isCinematic;
     }
 }
