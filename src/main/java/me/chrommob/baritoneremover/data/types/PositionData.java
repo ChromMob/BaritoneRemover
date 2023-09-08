@@ -63,4 +63,12 @@ public class PositionData {
     public int hashCode() {
         return Objects.hash(x, y, z);
     }
+
+    @Override
+    public String toString() {
+        return "PositionData[" +
+                "x=" + x + ", " +
+                "y=" + y + ", " +
+                "z=" + z + ']';
+    }
 }

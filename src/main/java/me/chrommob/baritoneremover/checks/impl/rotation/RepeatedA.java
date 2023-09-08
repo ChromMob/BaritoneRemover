@@ -57,18 +57,31 @@ public class RepeatedA extends Check {
 
         int maxPatternLength = 0;
         int maxPatternRepeats = 0;
+        int totalRotations = 0;
+        List<RotationData> maxPatternData = null;
         for (Map.Entry<List<Integer>, List<RotationData>> patternEntry : patternToRotationDataMap.entrySet()) {
             List<Integer> pattern = patternEntry.getKey();
             List<RotationData> rotationDataList = patternEntry.getValue();
-            if (pattern.size() > maxPatternLength) {
-                maxPatternLength = pattern.size();
-            }
-            if (rotationDataList.size() > maxPatternRepeats && rotationDataList.size() > 1) {
-                maxPatternRepeats = rotationDataList.size();
+            int patternLength = pattern.size();
+            int patternRepeats = rotationDataList.size();
+            int totalPatternRotations = patternLength * patternRepeats;
+            if (totalPatternRotations > totalRotations) {
+                maxPatternData = rotationDataList;
+                maxPatternLength = patternLength;
+                maxPatternRepeats = patternRepeats;
+                totalRotations = totalPatternRotations;
             }
         }
-        debug("totalRotations: " + maxPatternLength * maxPatternRepeats + " maxPatternLength: " + maxPatternLength + " maxPatternRepeats: " + maxPatternRepeats);
-        if (maxPatternLength * maxPatternRepeats > 200) {
+        if (maxPatternData == null) {
+            return;
+        }
+        StringBuilder patternBuilder = new StringBuilder();
+        for (RotationData rotationData : maxPatternData) {
+            patternBuilder.append(rotationData.toString()).append(" ");
+        }
+        debug("pattern: " + patternBuilder);
+        debug("totalRotations: " + totalRotations + " maxPatternLength: " + maxPatternLength + " maxPatternRepeats: " + maxPatternRepeats);
+        if (totalRotations > 200 && maxPatternLength > 1 && maxPatternRepeats > 1) {
             increaseVl(punishVl());
         }
     }

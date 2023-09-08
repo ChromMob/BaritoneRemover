@@ -55,18 +55,31 @@ public class RepeatedB extends Check {
 
         int maxPatternLength = 0;
         int maxPatternRepeats = 0;
+        int totalBlocks = 0;
+        List<PositionData> maxPatternData = null;
         for (Map.Entry<List<Integer>, List<PositionData>> patternEntry : patternToPositionDataMap.entrySet()) {
             List<Integer> pattern = patternEntry.getKey();
             List<PositionData> rotationDataList = patternEntry.getValue();
-            if (pattern.size() > maxPatternLength) {
-                maxPatternLength = pattern.size();
-            }
-            if (rotationDataList.size() > maxPatternRepeats && rotationDataList.size() > 1) {
-                maxPatternRepeats = rotationDataList.size();
+            int patternLength = pattern.size();
+            int patternRepeats = rotationDataList.size();
+            int blocks = patternLength * patternRepeats;
+            if (blocks > totalBlocks) {
+                maxPatternData = rotationDataList;
+                totalBlocks = blocks;
+                maxPatternLength = patternLength;
+                maxPatternRepeats = patternRepeats;
             }
         }
+        StringBuilder patternBuilder = new StringBuilder();
+        if (maxPatternData == null) {
+            return;
+        }
+        for (PositionData data : maxPatternData) {
+            patternBuilder.append(data.toString()).append(" ");
+        }
         debug("totalBlocks: " + maxPatternLength * maxPatternRepeats + " maxPatternLength: " + maxPatternLength + " maxPatternRepeats: " + maxPatternRepeats);
-        if (maxPatternLength * maxPatternRepeats > 200) {
+        debug("pattern: " + patternBuilder);
+        if (totalBlocks > 200 && maxPatternLength > 1 && maxPatternRepeats > 1) {
             increaseVl(punishVl());
         }
     }

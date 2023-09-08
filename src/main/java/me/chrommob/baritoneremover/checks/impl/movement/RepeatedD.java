@@ -67,18 +67,31 @@ public class RepeatedD extends Check {
 
         int maxPatternLength = 0;
         int maxPatternRepeats = 0;
+        int totalPatternsD = 0;
+        List<Data> maxPatternData = null;
         for (Map.Entry<List<Integer>, List<Data>> patternEntry : patternToDataMap.entrySet()) {
             List<Integer> pattern = patternEntry.getKey();
             List<Data> rotationDataList = patternEntry.getValue();
-            if (pattern.size() > maxPatternLength) {
-                maxPatternLength = pattern.size();
-            }
-            if (rotationDataList.size() > maxPatternRepeats && rotationDataList.size() > 1) {
-                maxPatternRepeats = rotationDataList.size();
+            int patternLength = pattern.size();
+            int patternRepeats = rotationDataList.size();
+            int totalPatterns = patternLength * patternRepeats;
+            if (totalPatterns > totalPatternsD) {
+                maxPatternData = rotationDataList;
+                totalPatternsD = totalPatterns;
+                maxPatternLength = patternLength;
+                maxPatternRepeats = patternRepeats;
             }
         }
         debug("totalPatternsD: " + maxPatternLength * maxPatternRepeats + " maxPatternLength: " + maxPatternLength + " maxPatternRepeats: " + maxPatternRepeats);
-        if (maxPatternLength * maxPatternRepeats > 200) {
+        StringBuilder patternBuilder = new StringBuilder();
+        if (maxPatternData == null) {
+            return;
+        }
+        for (Data data : maxPatternData) {
+            patternBuilder.append(data.toString()).append(" ");
+        }
+        debug("pattern: " + patternBuilder);
+        if (totalPatternsD > 200 && maxPatternLength > 1 && maxPatternRepeats > 1) {
             increaseVl(punishVl());
         }
     }
@@ -108,6 +121,11 @@ class Data {
     @Override
     public int hashCode() {
         return (int) (xDifference + yDifference + zDifference);
+    }
+
+    @Override
+    public String toString() {
+        return xDifference + ":" + yDifference + ":" + zDifference;
     }
 }
 
