@@ -20,7 +20,7 @@ public class RepeatedD extends Check {
     }
 
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         List<PacketData> packetDatas = playerData.packetDataList().getAllType(CheckType.FLYING, CheckType.POSITION);
         if (packetDatas.size() < 2) {
             return;

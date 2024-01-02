@@ -13,7 +13,6 @@ import me.chrommob.baritoneremover.listener.DisconnectListener;
 import me.chrommob.baritoneremover.listener.MiningListener;
 import me.chrommob.baritoneremover.listener.RotationListener;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -37,7 +36,7 @@ public final class BaritoneRemover extends JavaPlugin {
             debugFolder.mkdirs();
         }
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-        //Are all listeners read only?
+        // Are all listeners read only?
         PacketEvents.getAPI().getSettings().reEncodeByDefault(false)
                 .checkForUpdates(false)
                 .bStats(true);
@@ -86,7 +85,6 @@ public final class BaritoneRemover extends JavaPlugin {
     public File configFile() {
         return configFile;
     }
-
 
     public File debugFolder() {
         return debugFolder;

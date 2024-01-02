@@ -7,14 +7,19 @@ import me.chrommob.baritoneremover.data.PacketDatas;
 import me.chrommob.baritoneremover.data.PlayerData;
 import me.chrommob.baritoneremover.data.types.PacketData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CheckData(name = "TimeBetween", identifier = "A", description = "Checks the time it took to start mining a block after mining the previous block", checkType = CheckType.MINING)
 public class TimeBetweenA extends Check {
     public TimeBetweenA(PlayerData playerData) {
         super(playerData);
     }
 
+    private List<Float> lastRotates = new ArrayList<>();
+
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         PacketDatas packetDatas = playerData.packetDataList();
         //Shouldn't happen but just in case
         if (packetDatas.size(CheckType.MINING) == 0) {
@@ -68,8 +73,31 @@ public class TimeBetweenA extends Check {
             return;
         }
         float timeToRotate = (float) time / distance;
-        //If the player rotated that fast, they are probably using a bot
-        debug("timeToRotateA: " + timeToRotate);
+        if (lastRotates.size() >= 10) {
+            lastRotates.remove(0);
+        }
+        lastRotates.add(timeToRotate);
+        if (lastRotates.size() < 2) {
+            return;
+        }
+        double sum = 0;
+        for (float number : lastRotates) {
+            sum += number;
+        }
+        double mean = sum / lastRotates.size();
+
+        double squaredDifferencesSum = 0;
+        for (float number : lastRotates) {
+            double difference = number - mean;
+            squaredDifferencesSum += difference * difference;
+        }
+
+        double meanOfSquaredDifferences = squaredDifferencesSum / lastRotates.size();
+
+        double standardDeviation = Math.sqrt(meanOfSquaredDifferences);
+        if (standardDeviation < 10000)
+            return;
+        debug("timeToRotateA: " + timeToRotate + " standardDeviation: " + standardDeviation);
         if (timeToRotate > 2) {
             return;
         }

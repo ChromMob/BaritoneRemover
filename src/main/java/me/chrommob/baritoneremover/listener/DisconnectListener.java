@@ -8,6 +8,7 @@ import me.chrommob.baritoneremover.data.DataHolder;
 
 public class DisconnectListener extends SimplePacketListenerAbstract {
     private final DataHolder dataHolder;
+
     public DisconnectListener(BaritoneRemover pl) {
         this.dataHolder = pl.dataHolder();
     }

@@ -18,7 +18,7 @@ public class RepeatedA extends Check {
     }
 
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         if (playerData.isCinematic()) {
             return;
         }

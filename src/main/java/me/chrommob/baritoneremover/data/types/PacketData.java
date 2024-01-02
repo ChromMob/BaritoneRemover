@@ -14,7 +14,8 @@ public final class PacketData {
     private final boolean finishedMining;
     private final boolean placedBlock;
 
-    public PacketData(CheckType checkType ,int index, long timeStamp, PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock) {
+    public PacketData(CheckType checkType, int index, long timeStamp, PositionData positionData,
+            RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock) {
         this.checkType = checkType;
         this.index = index;
         this.timeStamp = timeStamp;
@@ -49,15 +50,16 @@ public final class PacketData {
         return finishedMining;
     }
 
-    public boolean placedBlock(){
+    public boolean placedBlock() {
         return placedBlock;
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this)
+            return true;
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
         PacketData that = (PacketData) obj;
         return this.index == that.index &&
                 this.timeStamp == that.timeStamp &&

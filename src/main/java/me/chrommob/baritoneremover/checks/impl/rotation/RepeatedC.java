@@ -6,7 +6,6 @@ import me.chrommob.baritoneremover.checks.inter.CheckType;
 import me.chrommob.baritoneremover.checks.inter.Utils;
 import me.chrommob.baritoneremover.data.PlayerData;
 import me.chrommob.baritoneremover.data.types.PacketData;
-import me.chrommob.baritoneremover.data.types.PositionData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class RepeatedC extends Check {
     }
 
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         if (playerData.isCinematic()) {
             return;
         }

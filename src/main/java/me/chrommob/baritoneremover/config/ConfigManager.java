@@ -29,6 +29,7 @@ public class ConfigManager {
     private final Sender sender = new Sender(this);
     private final Map<Class<? extends Check>, ConfigData> configDataMap = new HashMap<>();
     private Component prefix;
+    private double minTps;
     private boolean webHookEnabled;
     private String webHookUrl;
     private LinkedHashMap<String, Object> config;
@@ -90,7 +91,9 @@ public class ConfigManager {
         } catch (IOException ignored) {
         }
         saveConfig();
-        prefix = miniMessage.deserializeOr(config.get("prefix").toString(), Component.text("[").color(NamedTextColor.WHITE)
+        minTps = config.get("min-tps") instanceof String ? Double.parseDouble((String) config.get("min-tps")) : (Double) config.get("min-tps");
+        prefix = miniMessage.deserializeOr(config.get("prefix").toString(),
+                Component.text("[").color(NamedTextColor.WHITE)
                         .append(Component.text("BaritoneRemover").color(NamedTextColor.RED))
                         .append(Component.text("] ").color(NamedTextColor.WHITE)));
 
@@ -124,7 +127,8 @@ public class ConfigManager {
         sender.load();
     }
 
-    private LinkedHashMap<String, Object> merge(LinkedHashMap<String, Object> load, LinkedHashMap<String, Object> config) {
+    private LinkedHashMap<String, Object> merge(LinkedHashMap<String, Object> load,
+            LinkedHashMap<String, Object> config) {
         if (load == null) {
             return config;
         }
@@ -133,26 +137,28 @@ public class ConfigManager {
         }
         config.forEach((key, value) -> {
             if (value instanceof LinkedHashMap) {
-                load.put(key, merge((LinkedHashMap<String, Object>) load.get(key), (LinkedHashMap<String, Object>) value));
+                load.put(key,
+                        merge((LinkedHashMap<String, Object>) load.get(key), (LinkedHashMap<String, Object>) value));
             } else {
                 if (!load.containsKey(key)) {
                     load.put(key, value);
                 }
             }
         });
-        //Fix the oder too
+        // Fix the oder too
         LinkedHashMap<String, Object> newLoad = new LinkedHashMap<>();
         config.forEach((key, value) -> {
             if (load.containsKey(key)) {
                 newLoad.put(key, load.get(key));
             }
         });
-        //Remove keys that are not in the default config checking for nested too
+        // Remove keys that are not in the default config checking for nested too
         load.forEach((key, value) -> {
             if (!config.containsKey(key)) {
                 newLoad.put(key, value);
             } else if (value instanceof LinkedHashMap) {
-                newLoad.put(key, merge((LinkedHashMap<String, Object>) value, (LinkedHashMap<String, Object>) config.get(key)));
+                newLoad.put(key,
+                        merge((LinkedHashMap<String, Object>) value, (LinkedHashMap<String, Object>) config.get(key)));
             }
         });
         return newLoad;
@@ -162,6 +168,8 @@ public class ConfigManager {
         config = new LinkedHashMap<>();
 
         config.put("prefix", "[<red>BaritoneRemover<white>] ");
+
+        config.put("min-tps", 18.0);
 
         Map<String, Object> webHook = new LinkedHashMap<>();
         webHook.put("enable", false);
@@ -178,7 +186,9 @@ public class ConfigManager {
             checkMap.put("punish", true);
             checkMap.put("punish-vl", 20);
             checkMap.put("punish-command", "kick %player%");
-            configChecks.put(check.getAnnotation(CheckData.class).name() + check.getAnnotation(CheckData.class).identifier(), checkMap);
+            configChecks.put(
+                    check.getAnnotation(CheckData.class).name() + check.getAnnotation(CheckData.class).identifier(),
+                    checkMap);
             configDataMap.put(check, new ConfigData(true, true, 20, "kick %player%"));
         });
 
@@ -240,6 +250,10 @@ public class ConfigManager {
 
     public Sender sender() {
         return sender;
+    }
+
+    public double minTps() {
+        return minTps;
     }
 
     public BaritoneRemover plugin() {

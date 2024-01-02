@@ -14,12 +14,15 @@ import org.bukkit.command.CommandSender;
 @CommandPermission("br.reload")
 public class ReloadCommand extends BaseCommand {
     private final BaritoneRemover plugin;
+
     public ReloadCommand(BaritoneRemover pl) {
         this.plugin = pl;
     }
+
     @Subcommand("reload")
     public void onReload(CommandSender sender) {
-        ConfigManager.getInstance().adventure().sender(sender).sendMessage(ConfigManager.getInstance().prefix().append(Component.text("Reloading...").color(NamedTextColor.GREEN)));
+        ConfigManager.getInstance().adventure().sender(sender).sendMessage(ConfigManager.getInstance().prefix()
+                .append(Component.text("Reloading...").color(NamedTextColor.GREEN)));
         plugin.reload();
     }
 }

@@ -51,8 +51,10 @@ public class PositionData {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this)
+            return true;
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
         PositionData that = (PositionData) obj;
         return Double.doubleToLongBits(this.x) == Double.doubleToLongBits(that.x) &&
                 Double.doubleToLongBits(this.y) == Double.doubleToLongBits(that.y) &&

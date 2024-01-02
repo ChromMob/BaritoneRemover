@@ -43,7 +43,7 @@ public abstract class Check {
     private int currentVl = 0;
     private long latestFlag = System.currentTimeMillis();
 
-    public abstract void run(CheckType updateType);
+    public abstract void run();
 
     public void increaseVl(int amount) {
         if (hidden) {

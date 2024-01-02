@@ -1,6 +1,7 @@
 package me.chrommob.baritoneremover.data;
 
 import com.github.retrooper.packetevents.util.Vector3d;
+import me.chrommob.baritoneremover.BaritoneRemover;
 import me.chrommob.baritoneremover.checks.inter.Check;
 import me.chrommob.baritoneremover.checks.inter.CheckType;
 import me.chrommob.baritoneremover.checks.inter.Checks;
@@ -9,8 +10,10 @@ import me.chrommob.baritoneremover.data.types.PositionData;
 import me.chrommob.baritoneremover.data.types.RotationData;
 import org.bukkit.Bukkit;
 
+import javax.print.attribute.standard.Severity;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerData {
     private final String name;
@@ -18,7 +21,15 @@ public class PlayerData {
     private boolean debug = false;
     private boolean isCinematic = false;
     private PacketDatas packetDataList = new PacketDatas();
+    private long lastTPSCheck = System.currentTimeMillis();
     public PlayerData(String name, Checks checks) {
+        Bukkit.getScheduler().runTaskTimer(BaritoneRemover.getPlugin(BaritoneRemover.class), () -> {
+            long currentTime = System.currentTimeMillis();
+            long difference = currentTime - lastTPSCheck;
+            double TPS = 20.0 / (difference / 1000.0);
+            this.TPS.set(TPS < ConfigManager.getInstance().minTps());
+            lastTPSCheck = currentTime;
+        }, 20L, 20L);
         this.name = name;
         checks.getChecks().forEach(check -> {
             try {
@@ -27,7 +38,8 @@ public class PlayerData {
                 e.printStackTrace();
             }
         });
-        isBedrock = ConfigManager.getInstance().floodgateApi() != null && ConfigManager.getInstance().floodgateApi().isFloodgatePlayer(Bukkit.getPlayer(name).getUniqueId());
+        isBedrock = ConfigManager.getInstance().floodgateApi() != null
+                && ConfigManager.getInstance().floodgateApi().isFloodgatePlayer(Bukkit.getPlayer(name).getUniqueId());
     }
 
     private final Set<Check> checks = new HashSet<>();
@@ -45,7 +57,8 @@ public class PlayerData {
     }
 
     public void updateBoth(Vector3d position, float pitch, float yaw) {
-        packetDataList.add(CheckType.FLYING, new PositionData(position), new RotationData(pitch, yaw), false, false, false);
+        packetDataList.add(CheckType.FLYING, new PositionData(position), new RotationData(pitch, yaw), false, false,
+                false);
         runChecks(CheckType.FLYING);
         runChecks(CheckType.ANY);
     }
@@ -78,15 +91,17 @@ public class PlayerData {
         return name;
     }
 
+    private AtomicBoolean TPS = new AtomicBoolean(false);
     public void runChecks(CheckType updateType) {
         if (updateType == CheckType.NONE) {
             return;
         }
+        if (TPS.get()) return;
         checks.forEach(check -> {
             if (check.checkType() != updateType) {
                 return;
             }
-            check.run(updateType);
+            check.run();
         });
         if (packetDataList.size() == 0) {
             return;
@@ -94,7 +109,7 @@ public class PlayerData {
         if (packetDataList.size() % 100 == 0) {
             checks.forEach(check -> {
                 if (check.checkType() == CheckType.AGGREGATE) {
-                    check.run(updateType);
+                    check.run();
                 }
             });
         }

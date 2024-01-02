@@ -22,7 +22,8 @@ public class Sender {
         enabled = configManager.webHookEnabled();
         if (enabled) {
             Bukkit.getScheduler().cancelTask(taskID);
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(configManager.plugin(), this::sendMessages, 20, 20);
+            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(configManager.plugin(), this::sendMessages, 20,
+                    20);
         } else {
             Bukkit.getScheduler().cancelTask(taskID);
         }
@@ -33,8 +34,10 @@ public class Sender {
     private final List<WebHookMessage> priorityMessages = new ArrayList<>();
     private final List<WebHookMessage> messages = new ArrayList<>();
     private final Map<String, Long> playerLastMessage = new HashMap<>();
+
     public void add(String message, String username, boolean priority) {
-        if (!enabled) return;
+        if (!enabled)
+            return;
         if (priority) {
             priorityMessages.add(new WebHookMessage(message, username));
         } else {
@@ -61,17 +64,20 @@ public class Sender {
             Map<String, List<String>> map = connection.getHeaderFields();
             if (map.containsKey("X-RateLimit-Remaining"))
                 remaining = Integer.parseInt(map.get("X-RateLimit-Remaining").get(0));
-            else remaining = -1;
+            else
+                remaining = -1;
             if (map.containsKey("X-RateLimit-Reset"))
                 remainingReset = Long.parseLong(map.get("X-RateLimit-Reset").get(0)) * 1000;
-            else remainingReset = System.currentTimeMillis();
+            else
+                remainingReset = System.currentTimeMillis();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void sendMessages() {
-        //Create list of usernames that have queued messages and have not sent a message at all or in the last time
+        // Create list of usernames that have queued messages and have not sent a
+        // message at all or in the last time
         List<WebHookMessage> priorityMessages = new ArrayList<>(this.priorityMessages);
 
         List<WebHookMessage> toSend = new ArrayList<>(priorityMessages);
@@ -103,6 +109,7 @@ class WebHookMessage {
     public final String content;
     public final String username;
     public final long timestamp = System.currentTimeMillis();
+
     public WebHookMessage(String content, String username) {
         this.content = content;
         this.username = username;
@@ -110,7 +117,8 @@ class WebHookMessage {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WebHookMessage)) return false;
+        if (!(obj instanceof WebHookMessage))
+            return false;
         WebHookMessage message = (WebHookMessage) obj;
         return message.content.equals(content) && message.username.equals(username);
     }

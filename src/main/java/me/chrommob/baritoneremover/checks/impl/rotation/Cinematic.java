@@ -20,7 +20,7 @@ public class Cinematic extends Check {
     }
 
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         final long now = System.currentTimeMillis();
 
         if (playerData.packetDataList().size(CheckType.ROTATION) < 2) {

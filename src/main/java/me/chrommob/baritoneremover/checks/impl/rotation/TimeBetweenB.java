@@ -14,7 +14,7 @@ public class TimeBetweenB extends Check {
     }
 
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         PacketDatas packetDatas = playerData.packetDataList();
         if (packetDatas.size(checkType()) < 2) {
             return;

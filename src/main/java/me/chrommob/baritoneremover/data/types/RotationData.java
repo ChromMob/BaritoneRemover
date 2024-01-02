@@ -21,8 +21,10 @@ public final class RotationData {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this)
+            return true;
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
         RotationData that = (RotationData) obj;
         return Float.floatToIntBits(this.pitch) == Float.floatToIntBits(that.pitch) &&
                 Float.floatToIntBits(this.yaw) == Float.floatToIntBits(that.yaw);

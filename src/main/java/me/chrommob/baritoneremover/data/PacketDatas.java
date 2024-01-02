@@ -10,13 +10,15 @@ import java.util.List;
 
 public class PacketDatas {
     private final List<PacketData> packetDatas;
+
     public PacketDatas() {
         packetDatas = new ArrayList<>();
     }
 
-
-    public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock) {
-        PacketData packetData = new PacketData(checkType, packetDatas.size(), System.currentTimeMillis(), positionData, rotationData, mining, finishedMining, placedBlock);
+    public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining,
+            boolean finishedMining, boolean placedBlock) {
+        PacketData packetData = new PacketData(checkType, packetDatas.size(), System.currentTimeMillis(), positionData,
+                rotationData, mining, finishedMining, placedBlock);
         packetDatas.add(packetData);
     }
 
@@ -46,6 +48,7 @@ public class PacketDatas {
         }
         return null;
     }
+
     public PacketData get(int index) {
         return packetDatas.get(index);
     }

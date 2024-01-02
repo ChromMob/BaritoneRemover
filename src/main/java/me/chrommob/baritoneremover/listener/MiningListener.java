@@ -11,6 +11,7 @@ import me.chrommob.baritoneremover.data.PlayerData;
 
 public class MiningListener extends SimplePacketListenerAbstract {
     private final DataHolder dataHolder;
+
     public MiningListener(BaritoneRemover pl) {
         this.dataHolder = pl.dataHolder();
     }

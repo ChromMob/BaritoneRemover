@@ -16,7 +16,7 @@ public class CombinedA extends Check {
     }
 
     @Override
-    public void run(CheckType updateType) {
+    public void run() {
         resetVl();
         Set<Check> checks = new HashSet<>(playerData.checks());
         if (checks.isEmpty()) {
