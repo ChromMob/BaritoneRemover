@@ -45,7 +45,8 @@ public class TimeBetweenB extends Check {
         } else if (previousFlying == null) {
             previousRotationInfo = previousRotation;
         } else {
-            previousRotationInfo = previousRotation.timeStamp() > previousFlying.timeStamp() ? previousRotation : previousFlying;
+            previousRotationInfo = previousRotation.timeStamp() > previousFlying.timeStamp() ? previousRotation
+                    : previousFlying;
         }
         float distance = latestRotationInfo.rotationData().distance(previousRotationInfo.rotationData());
         debug("distanceB: " + distance);
@@ -62,6 +63,6 @@ public class TimeBetweenB extends Check {
         if (timeToRotate > 2) {
             return;
         }
-        increaseVl(Math.round((1/timeToRotate)));
+        increaseVl(Math.round((1 / timeToRotate)));
     }
 }
