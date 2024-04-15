@@ -22,7 +22,7 @@ public class Sender {
         enabled = configManager.webHookEnabled();
         if (enabled) {
             Bukkit.getScheduler().cancelTask(taskID);
-            taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(configManager.plugin(), this::sendMessages, 20,
+            taskID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(configManager.plugin(), this::sendMessages, 20,
                     20);
         } else {
             Bukkit.getScheduler().cancelTask(taskID);
