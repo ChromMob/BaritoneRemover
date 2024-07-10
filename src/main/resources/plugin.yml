@@ -9,3 +9,6 @@ permissions:
     br.debug:
         description: Allows the player to receive debug messages from the plugin
         default: op
+    br.bypass:
+        description: Allows the player to bypass the plugin
+        default: op

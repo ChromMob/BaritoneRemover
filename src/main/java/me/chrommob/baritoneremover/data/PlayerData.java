@@ -91,12 +91,15 @@ public class PlayerData {
         return name;
     }
 
-    private AtomicBoolean TPS = new AtomicBoolean(false);
+    private final AtomicBoolean TPS = new AtomicBoolean(false);
     public void runChecks(CheckType updateType) {
         if (updateType == CheckType.NONE) {
             return;
         }
         if (TPS.get()) return;
+        if (Bukkit.getPlayer(name).hasPermission("br.bypass")) {
+            return;
+        }
         checks.forEach(check -> {
             if (check.checkType() != updateType) {
                 return;
