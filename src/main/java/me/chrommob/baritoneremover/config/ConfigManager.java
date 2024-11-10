@@ -29,6 +29,7 @@ public class ConfigManager {
     private final Sender sender = new Sender(this);
     private final Map<Class<? extends Check>, ConfigData> configDataMap = new HashMap<>();
     private Component prefix;
+    private Component punishmentMessage;
     private double minTps;
     private boolean webHookEnabled;
     private String webHookUrl;
@@ -96,7 +97,7 @@ public class ConfigManager {
                 Component.text("[").color(NamedTextColor.WHITE)
                         .append(Component.text("BaritoneRemover").color(NamedTextColor.RED))
                         .append(Component.text("] ").color(NamedTextColor.WHITE)));
-
+        punishmentMessage = miniMessage.deserialize((String) config.get("punishment-message"));
         Map<String, Object> webHook = (Map<String, Object>) config.get("webhook");
         webHookEnabled = (boolean) webHook.get("enable");
         webHookUrl = (String) webHook.get("url");
@@ -169,6 +170,8 @@ public class ConfigManager {
 
         config.put("prefix", "[<red>BaritoneRemover<white>] ");
 
+        config.put("punishment-message", "Player <red>{player}</red> has been flagged for <red>{check}</red> (VL: {vl}/{punish-vl})");
+
         config.put("min-tps", 18.0);
 
         Map<String, Object> webHook = new LinkedHashMap<>();
@@ -230,6 +233,10 @@ public class ConfigManager {
 
     public Component prefix() {
         return prefix;
+    }
+
+    public Component punishmentMessage() {
+        return punishmentMessage;
     }
 
     public static ConfigManager getInstance() {

@@ -4,7 +4,9 @@ import me.chrommob.baritoneremover.BaritoneRemover;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.PlayerData;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 
 public abstract class Check {
@@ -67,15 +69,15 @@ public abstract class Check {
 
     private void alert() {
         int currentVl = this.currentVl;
-        String message = "Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")";
-        ConfigManager.getInstance().appendDebug(message);
-        ConfigManager.getInstance().adventure().permission("br.alert").sendMessage(
-                ConfigManager.getInstance().prefix()
-                .append(Component.text("Player ").color(NamedTextColor.WHITE))
-                .append(Component.text(playerName).color(NamedTextColor.RED))
-                .append(Component.text(" has been flagged for ").color(NamedTextColor.WHITE))
-                .append(Component.text(name + " (" + identifier + ")").color(NamedTextColor.RED))
-                .append(Component.text(" (VL: " + currentVl + "/" + punishVl + ")").color(NamedTextColor.WHITE)).hoverEvent(Component.text(description).color(NamedTextColor.AQUA)));
+        Component message = ConfigManager.getInstance().punishmentMessage()
+                .replaceText(TextReplacementConfig.builder().matchLiteral("{player}").replacement(playerName).build())
+                .replaceText(TextReplacementConfig.builder().matchLiteral("{check}").replacement(name + " (" + identifier + ")").build())
+                .replaceText(TextReplacementConfig.builder().matchLiteral("{vl}").replacement(String.valueOf(currentVl)).build())
+                .replaceText(TextReplacementConfig.builder().matchLiteral("{punish-vl}").replacement(String.valueOf(punishVl)).build())
+                .hoverEvent(Component.text(description).color(NamedTextColor.AQUA));
+        ConfigManager.getInstance().adventure().permission("br.alert").sendMessage(message);
+        String messageString = PlainTextComponentSerializer.plainText().serialize(message);
+        ConfigManager.getInstance().appendDebug(messageString);
         String json = "{\"content\": \"Player " + playerName + " has been flagged for " + name + " (" + identifier + ") (VL: " + currentVl + "/" + punishVl + ")\"}";
         ConfigManager.getInstance().sender().add(json, playerName,currentVl >= punishVl);
     }
