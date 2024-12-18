@@ -9,6 +9,7 @@ import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.types.PositionData;
 import me.chrommob.baritoneremover.data.types.RotationData;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import javax.print.attribute.standard.Severity;
 import java.util.HashSet;
@@ -97,7 +98,8 @@ public class PlayerData {
             return;
         }
         if (TPS.get()) return;
-        if (Bukkit.getPlayer(name).hasPermission("br.bypass")) {
+        Player player = Bukkit.getPlayer(name);
+        if (player != null && player.hasPermission("br.bypass")) {
             return;
         }
         checks.forEach(check -> {
