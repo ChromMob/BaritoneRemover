@@ -1,5 +1,6 @@
 package me.chrommob.baritoneremover.webhook;
 
+import me.chrommob.baritoneremover.BaritoneRemover;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import org.bukkit.Bukkit;
 
@@ -22,8 +23,7 @@ public class Sender {
         enabled = configManager.webHookEnabled();
         if (enabled) {
             Bukkit.getScheduler().cancelTask(taskID);
-            taskID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(configManager.plugin(), this::sendMessages, 20,
-                    20);
+            taskID = BaritoneRemover.scheduler().runTimer(this::sendMessages, 20, 20);
         } else {
             Bukkit.getScheduler().cancelTask(taskID);
         }

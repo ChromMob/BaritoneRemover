@@ -23,7 +23,7 @@ public class PacketDatas {
     }
 
     public PacketData getLatest() {
-        if (packetDatas.size() == 0) {
+        if (packetDatas.isEmpty()) {
             return null;
         }
         return packetDatas.get(packetDatas.size() - 1);
@@ -96,6 +96,7 @@ public class PacketDatas {
 
     public List<PacketData> getAllType(CheckType checkType, CheckType checkType2) {
         List<PacketData> packetDataList = new ArrayList<>();
+        List<PacketData> packetDatas = new ArrayList<>(this.packetDatas);
         for (PacketData packetData : packetDatas) {
             if (packetData.checkType() == checkType || packetData.checkType() == checkType2) {
                 packetDataList.add(packetData);

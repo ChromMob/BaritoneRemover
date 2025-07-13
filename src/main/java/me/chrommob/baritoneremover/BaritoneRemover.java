@@ -8,6 +8,7 @@ import me.chrommob.baritoneremover.commands.DebugCommand;
 import me.chrommob.baritoneremover.commands.ReloadCommand;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.DataHolder;
+import me.chrommob.baritoneremover.data.Scheduler;
 import me.chrommob.baritoneremover.listener.BlockPlaceListener;
 import me.chrommob.baritoneremover.listener.DisconnectListener;
 import me.chrommob.baritoneremover.listener.MiningListener;
@@ -23,9 +24,15 @@ public final class BaritoneRemover extends JavaPlugin {
     private ConfigManager configManager;
     private File configFile;
     private File debugFolder;
+    private static Scheduler scheduler;
+
+    public static Scheduler scheduler() {
+        return scheduler;
+    }
 
     @Override
     public void onLoad() {
+        scheduler = new Scheduler(this);
         File dataFolder = getDataFolder();
         configFile = new File(dataFolder, "config.yml");
         debugFolder = new File(dataFolder, "debug");

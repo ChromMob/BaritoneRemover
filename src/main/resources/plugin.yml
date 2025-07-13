@@ -2,6 +2,7 @@ name: BaritoneRemover
 version: '${version}'
 main: me.chrommob.baritoneremover.BaritoneRemover
 api-version: '1.13'
+folia-supported: true
 permissions:
     br.alert:
         description: Allows the player to receive alerts from the plugin

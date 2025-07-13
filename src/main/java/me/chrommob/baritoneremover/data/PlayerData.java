@@ -24,7 +24,7 @@ public class PlayerData {
     private PacketDatas packetDataList = new PacketDatas();
     private long lastTPSCheck = System.currentTimeMillis();
     public PlayerData(String name, Checks checks) {
-        Bukkit.getScheduler().runTaskTimer(BaritoneRemover.getPlugin(BaritoneRemover.class), () -> {
+        BaritoneRemover.scheduler().runTimer(() -> {
             long currentTime = System.currentTimeMillis();
             long difference = currentTime - lastTPSCheck;
             double TPS = 20.0 / (difference / 1000.0);
@@ -78,7 +78,7 @@ public class PlayerData {
 
     public void blockPlace() {
         packetDataList.add(CheckType.PLACE, null, null, false, false, true);
-        Bukkit.getScheduler().runTaskAsynchronously(ConfigManager.getInstance().plugin(), () -> {
+        BaritoneRemover.scheduler().runAsync(() -> {
             runChecks(CheckType.PLACE);
             runChecks(CheckType.ANY);
         });

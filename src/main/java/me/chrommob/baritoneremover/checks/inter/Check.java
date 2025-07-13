@@ -35,7 +35,7 @@ public abstract class Check {
         this.punish = ConfigManager.getInstance().getConfigData(this.getClass()).punish();
         this.playerData = playerData;
         this.playerName = playerData.name();
-        Bukkit.getScheduler().runTaskTimer(BaritoneRemover.getPlugin(BaritoneRemover.class), () -> {
+        BaritoneRemover.scheduler().runTimer(() -> {
             if (System.currentTimeMillis() - latestFlag > 1000 * 20) {
                 currentVl = currentVl > 0 ? currentVl - 1 : 0;
             }
@@ -97,7 +97,7 @@ public abstract class Check {
         if (!punish) {
             return;
         }
-        Bukkit.getServer().getScheduler().runTask(BaritoneRemover.getPlugin(BaritoneRemover.class), () -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), punishment));
+        BaritoneRemover.scheduler().run(() -> BaritoneRemover.getPlugin(BaritoneRemover.class).getServer().dispatchCommand(BaritoneRemover.getPlugin(BaritoneRemover.class).getServer().getConsoleSender(), punishment));
     }
 
     public CheckType checkType() {
