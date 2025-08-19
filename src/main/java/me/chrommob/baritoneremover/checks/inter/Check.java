@@ -70,6 +70,7 @@ public abstract class Check {
     private void alert() {
         int currentVl = this.currentVl;
         Component message = ConfigManager.getInstance().punishmentMessage()
+                .replaceText(TextReplacementConfig.builder().matchLiteral("{prefix}").replacement(ConfigManager.getInstance().prefix()).build())
                 .replaceText(TextReplacementConfig.builder().matchLiteral("{player}").replacement(playerName).build())
                 .replaceText(TextReplacementConfig.builder().matchLiteral("{check}").replacement(name + " (" + identifier + ")").build())
                 .replaceText(TextReplacementConfig.builder().matchLiteral("{vl}").replacement(String.valueOf(currentVl)).build())
