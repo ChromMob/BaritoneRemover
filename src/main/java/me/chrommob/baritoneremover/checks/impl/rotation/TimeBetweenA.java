@@ -95,12 +95,35 @@ public class TimeBetweenA extends Check {
         double meanOfSquaredDifferences = squaredDifferencesSum / lastRotates.size();
 
         double standardDeviation = Math.sqrt(meanOfSquaredDifferences);
-        if (standardDeviation < 10000)
-            return;
-        debug("timeToRotateA: " + timeToRotate + " standardDeviation: " + standardDeviation);
-        if (timeToRotate > 2) {
+        
+        // Improved: Only flag if standard deviation is very high (indicating variance in human behavior)
+        // BUT the current sample is suspiciously low (bot-like precision)
+        if (standardDeviation < 5000) {
             return;
         }
-        increaseVl(Math.round((1/timeToRotate)));
+        
+        debug("timeToRotateA: " + timeToRotate + " standardDeviation: " + standardDeviation + " mean: " + mean);
+        
+        // Improved: Baritone rotates extremely fast between mining operations
+        // timeToRotate will be very low for bots (< 2ms per degree typically)
+        if (timeToRotate > 2.5) {
+            return;
+        }
+        
+        // Also check if this is consistently fast (not just one fast rotation)
+        int fastRotations = 0;
+        for (float rot : lastRotates) {
+            if (rot < 3.0f) {
+                fastRotations++;
+            }
+        }
+        
+        if (fastRotations < lastRotates.size() * 0.6) {
+            return;
+        }
+        
+        // Scale VL based on how fast the rotation is
+        int vlIncrease = Math.max(1, Math.round((1/timeToRotate)));
+        increaseVl(Math.min(vlIncrease, 5)); // Cap at 5 VL per detection
     }
 }
