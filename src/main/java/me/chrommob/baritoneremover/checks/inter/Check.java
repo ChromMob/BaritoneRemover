@@ -8,7 +8,6 @@ import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public abstract class Check {
     private CheckType checkType;
@@ -88,28 +87,10 @@ public abstract class Check {
         String message = "Debug: " + playerName + " " + name + " (" + identifier + ") " + text;
         ConfigManager.getInstance().appendDebug(message);
         if (playerData.isDebug()) {
-            Component debugMessage = ConfigManager.getInstance().prefix()
-                    .append(Component.text("[" + playerName + "] ", NamedTextColor.YELLOW))
-                    .append(Component.text(name + " (" + identifier + "): ", NamedTextColor.AQUA))
-                    .append(Component.text(text, NamedTextColor.RED));
-            
-            String debugger = playerData.getDebugger();
-            if (debugger == null) {
-                // Send to the player themselves
-                Player player = Bukkit.getPlayer(playerName);
-                if (player != null) {
-                    ConfigManager.getInstance().adventure().player(player).sendMessage(debugMessage);
-                }
-            } else {
-                // Send to the debugger
-                Player debuggerPlayer = Bukkit.getPlayer(debugger);
-                if (debuggerPlayer != null) {
-                    ConfigManager.getInstance().adventure().player(debuggerPlayer).sendMessage(debugMessage);
-                } else {
-                    // Debugger might be console
-                    ConfigManager.getInstance().adventure().console().sendMessage(debugMessage);
-                }
-            }
+            ConfigManager.getInstance().adventure().player(Bukkit.getPlayer(playerName)).sendMessage(
+                    ConfigManager.getInstance().prefix()
+                            .append(Component.text("Debug: ").color(NamedTextColor.WHITE))
+                            .append(Component.text(text).color(NamedTextColor.RED)));
         }
     }
 

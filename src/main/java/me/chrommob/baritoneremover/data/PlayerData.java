@@ -20,7 +20,6 @@ public class PlayerData {
     private final String name;
     private final boolean isBedrock;
     private boolean debug = false;
-    private String debugger = null; // Who is receiving debug messages (null = self)
     private boolean isCinematic = false;
     private PacketDatas packetDataList = new PacketDatas();
     private long lastTPSCheck = System.currentTimeMillis();
@@ -87,22 +86,6 @@ public class PlayerData {
 
     public void debug() {
         debug = !debug;
-        if (!debug) {
-            debugger = null; // Clear debugger when debug is disabled
-        }
-    }
-    
-    public void debug(String debuggerName) {
-        debug = !debug;
-        if (debug) {
-            debugger = debuggerName;
-        } else {
-            debugger = null;
-        }
-    }
-    
-    public String getDebugger() {
-        return debugger;
     }
 
     public String name() {
