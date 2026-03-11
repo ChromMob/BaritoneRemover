@@ -31,6 +31,7 @@ public class ConfigManager {
     private Component prefix;
     private Component punishmentMessage;
     private double minTps;
+    private boolean tempDebugLog = false;
     private boolean webHookEnabled;
     private String webHookUrl;
     private LinkedHashMap<String, Object> config;
@@ -79,6 +80,10 @@ public class ConfigManager {
         debugFile = temp;
         try {
             debugFile.createNewFile();
+            if (tempDebugLog) {
+                // Mark for deletion when the JVM terminates normally (won't apply on crash)
+                debugFile.deleteOnExit();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,6 +98,11 @@ public class ConfigManager {
         }
         saveConfig();
         minTps = config.get("min-tps") instanceof String ? Double.parseDouble((String) config.get("min-tps")) : (Double) config.get("min-tps");
+        tempDebugLog = Boolean.TRUE.equals(config.get("temp-debug-log"));
+        if (tempDebugLog && debugFile != null) {
+            // Mark for deletion when the JVM terminates normally (won't apply on crash)
+            debugFile.deleteOnExit();
+        }
         prefix = miniMessage.deserializeOr(config.get("prefix").toString(),
                 Component.text("[").color(NamedTextColor.WHITE)
                         .append(Component.text("BaritoneRemover").color(NamedTextColor.RED))
@@ -173,6 +183,8 @@ public class ConfigManager {
         config.put("punishment-message", "Player <red>{player}</red> has been flagged for <red>{check}</red> (VL: {vl}/{punish-vl})");
 
         config.put("min-tps", 18.0);
+
+        config.put("temp-debug-log", false);
 
         Map<String, Object> webHook = new LinkedHashMap<>();
         webHook.put("enable", false);
