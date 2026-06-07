@@ -8,18 +8,22 @@ import me.chrommob.baritoneremover.checks.inter.Checks;
 import me.chrommob.baritoneremover.config.ConfigManager;
 import me.chrommob.baritoneremover.data.types.PositionData;
 import me.chrommob.baritoneremover.data.types.RotationData;
+import me.chrommob.baritoneremover.data.types.BlockTargetData;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import javax.print.attribute.standard.Severity;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerData {
     private final String name;
     private final boolean isBedrock;
-    private boolean debug = false;
+    private final AtomicBoolean debugConsole = new AtomicBoolean(false);
+    private final Set<String> debugPlayers = ConcurrentHashMap.newKeySet();
     private boolean isCinematic = false;
     private PacketDatas packetDataList = new PacketDatas();
     private long lastTPSCheck = System.currentTimeMillis();
@@ -64,28 +68,59 @@ public class PlayerData {
         runChecks(CheckType.ANY);
     }
 
-    public void startMining() {
-        packetDataList.add(CheckType.MINING, null, null, true, false, false);
+    public void startMining(BlockTargetData blockTargetData) {
+        packetDataList.add(CheckType.MINING, null, null, true, false, false, blockTargetData);
+        if (isDebug()) {
+            sendDebug(Component.text("Mining START " + blockTargetData.key() + " face=" + blockTargetData.faceX()
+                    + "," + blockTargetData.faceY() + "," + blockTargetData.faceZ()));
+        }
         runChecks(CheckType.MINING);
         runChecks(CheckType.ANY);
     }
 
     public void finishMining() {
         packetDataList.add(CheckType.MINED, null, null, false, true, false);
+        if (isDebug()) {
+            sendDebug(Component.text("Mining FINISH"));
+        }
         runChecks(CheckType.MINED);
         runChecks(CheckType.ANY);
     }
 
-    public void blockPlace() {
-        packetDataList.add(CheckType.PLACE, null, null, false, false, true);
+    public void blockPlace(BlockTargetData blockTargetData) {
+        packetDataList.add(CheckType.PLACE, null, null, false, false, true, blockTargetData);
         BaritoneRemover.scheduler().runAsync(() -> {
             runChecks(CheckType.PLACE);
             runChecks(CheckType.ANY);
         });
     }
 
-    public void debug() {
-        debug = !debug;
+    public boolean toggleDebug(CommandSender viewer) {
+        if (!(viewer instanceof Player)) {
+            boolean enabled = !debugConsole.get();
+            debugConsole.set(enabled);
+            return enabled;
+        }
+        String viewerName = viewer.getName();
+        if (debugPlayers.remove(viewerName)) {
+            return false;
+        }
+        debugPlayers.add(viewerName);
+        return true;
+    }
+
+    public void sendDebug(Component message) {
+        if (debugConsole.get()) {
+            ConfigManager.getInstance().adventure().sender(Bukkit.getConsoleSender()).sendMessage(message);
+        }
+        for (String viewerName : new HashSet<>(debugPlayers)) {
+            Player viewer = Bukkit.getPlayerExact(viewerName);
+            if (viewer == null) {
+                debugPlayers.remove(viewerName);
+                continue;
+            }
+            ConfigManager.getInstance().adventure().player(viewer).sendMessage(message);
+        }
     }
 
     public String name() {
@@ -99,7 +134,7 @@ public class PlayerData {
         }
         if (TPS.get()) return;
         Player player = Bukkit.getPlayer(name);
-        if (player != null && player.hasPermission("br.bypass")) {
+        if (player != null && player.hasPermission("br.bypass") && !isDebug()) {
             return;
         }
         checks.forEach(check -> {
@@ -124,7 +159,7 @@ public class PlayerData {
     }
 
     public boolean isDebug() {
-        return debug;
+        return debugConsole.get() || !debugPlayers.isEmpty();
     }
 
     public boolean isBedrock() {

@@ -7,7 +7,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 
 public abstract class Check {
     private CheckType checkType;
@@ -87,10 +86,10 @@ public abstract class Check {
         String message = "Debug: " + playerName + " " + name + " (" + identifier + ") " + text;
         ConfigManager.getInstance().appendDebug(message);
         if (playerData.isDebug()) {
-            ConfigManager.getInstance().adventure().player(Bukkit.getPlayer(playerName)).sendMessage(
-                    ConfigManager.getInstance().prefix()
-                            .append(Component.text("Debug: ").color(NamedTextColor.WHITE))
-                            .append(Component.text(text).color(NamedTextColor.RED)));
+            playerData.sendDebug(ConfigManager.getInstance().prefix()
+                    .append(Component.text("Debug: ").color(NamedTextColor.WHITE))
+                    .append(Component.text(playerName + " " + name + " (" + identifier + ") " + text)
+                            .color(NamedTextColor.RED)));
         }
     }
 
@@ -113,5 +112,4 @@ public abstract class Check {
         return punishVl;
     }
 }
-
 

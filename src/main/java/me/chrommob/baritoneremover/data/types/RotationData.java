@@ -43,7 +43,7 @@ public final class RotationData {
     }
 
     public float distance(RotationData other) {
-        return Math.abs(pitch - other.pitch()) + Math.abs(yaw - other.yaw());
+        return differencePitch(other) + differenceYaw(other);
     }
 
     public float differencePitch(RotationData other) {
@@ -51,6 +51,7 @@ public final class RotationData {
     }
 
     public float differenceYaw(RotationData other) {
-        return Math.abs(yaw - other.yaw());
+        float difference = Math.abs(yaw - other.yaw()) % 360.0f;
+        return difference > 180.0f ? 360.0f - difference : difference;
     }
 }

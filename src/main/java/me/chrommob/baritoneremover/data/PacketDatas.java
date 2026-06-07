@@ -1,6 +1,7 @@
 package me.chrommob.baritoneremover.data;
 
 import me.chrommob.baritoneremover.checks.inter.CheckType;
+import me.chrommob.baritoneremover.data.types.BlockTargetData;
 import me.chrommob.baritoneremover.data.types.PacketData;
 import me.chrommob.baritoneremover.data.types.PositionData;
 import me.chrommob.baritoneremover.data.types.RotationData;
@@ -17,8 +18,13 @@ public class PacketDatas {
 
     public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining,
             boolean finishedMining, boolean placedBlock) {
+        add(checkType, positionData, rotationData, mining, finishedMining, placedBlock, null);
+    }
+
+    public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining,
+            boolean finishedMining, boolean placedBlock, BlockTargetData blockTargetData) {
         PacketData packetData = new PacketData(checkType, packetDatas.size(), System.currentTimeMillis(), positionData,
-                rotationData, mining, finishedMining, placedBlock);
+                rotationData, mining, finishedMining, placedBlock, blockTargetData);
         packetDatas.add(packetData);
     }
 

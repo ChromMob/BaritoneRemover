@@ -27,6 +27,10 @@ public class Checks {
         checks.add(RepeatedC.class);
         checks.add(TimeBetweenA.class);
         checks.add(TimeBetweenB.class);
+        checks.add(TargetLockA.class);
+        checks.add(TargetLockB.class);
+        checks.add(TargetLockC.class);
+        checks.add(TargetLockD.class);
 
         checks.add(CombinedA.class);
     }

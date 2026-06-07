@@ -13,9 +13,11 @@ public final class PacketData {
     private final boolean mining;
     private final boolean finishedMining;
     private final boolean placedBlock;
+    private final BlockTargetData blockTargetData;
 
     public PacketData(CheckType checkType, int index, long timeStamp, PositionData positionData,
-            RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock) {
+            RotationData rotationData, boolean mining, boolean finishedMining, boolean placedBlock,
+            BlockTargetData blockTargetData) {
         this.checkType = checkType;
         this.index = index;
         this.timeStamp = timeStamp;
@@ -24,6 +26,7 @@ public final class PacketData {
         this.mining = mining;
         this.finishedMining = finishedMining;
         this.placedBlock = placedBlock;
+        this.blockTargetData = blockTargetData;
     }
 
     public int index() {
@@ -52,6 +55,10 @@ public final class PacketData {
 
     public boolean placedBlock() {
         return placedBlock;
+    }
+
+    public BlockTargetData blockTargetData() {
+        return blockTargetData;
     }
 
     @Override
