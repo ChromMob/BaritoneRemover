@@ -1,5 +1,7 @@
 package me.chrommob.baritoneremover.data;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.util.Vector3d;
 import me.chrommob.baritoneremover.BaritoneRemover;
 import me.chrommob.baritoneremover.checks.inter.Check;
@@ -134,6 +136,10 @@ public class PlayerData {
         }
         if (TPS.get()) return;
         Player player = Bukkit.getPlayer(name);
+        if (shouldDisableChecksForPing(player)) {
+            resetPacketDataIfOverCapacity();
+            return;
+        }
         if (player != null && player.hasPermission("br.bypass") && !isDebug()) {
             return;
         }
@@ -153,9 +159,22 @@ public class PlayerData {
                 }
             });
         }
+        resetPacketDataIfOverCapacity();
+    }
+
+    private void resetPacketDataIfOverCapacity() {
         if (packetDataList.size() > 1000) {
             packetDataList = new PacketDatas();
         }
+    }
+
+    private boolean shouldDisableChecksForPing(Player player) {
+        ConfigManager configManager = ConfigManager.getInstance();
+        if (!configManager.pingDisableEnabled() || player == null) {
+            return false;
+        }
+        User user = PacketEvents.getAPI().getPlayerManager().getUser(player);
+        return user != null && PacketEvents.getAPI().getPlayerManager().getPing(player) >= configManager.pingDisableThreshold();
     }
 
     public boolean isDebug() {

@@ -34,6 +34,8 @@ public class ConfigManager {
     private boolean tempDebugLog = false;
     private boolean webHookEnabled;
     private String webHookUrl;
+    private boolean pingDisableEnabled;
+    private int pingDisableThreshold;
     private LinkedHashMap<String, Object> config;
     private final BukkitAudiences adventure;
     private FloodgateApi floodgateApi;
@@ -111,6 +113,12 @@ public class ConfigManager {
         Map<String, Object> webHook = (Map<String, Object>) config.get("webhook");
         webHookEnabled = (boolean) webHook.get("enable");
         webHookUrl = (String) webHook.get("url");
+        Map<String, Object> pingDisable = (Map<String, Object>) config.get("ping-disable");
+        pingDisableEnabled = Boolean.TRUE.equals(pingDisable.get("enabled"));
+        Object pingDisableThresholdValue = pingDisable.get("threshold");
+        pingDisableThreshold = pingDisableThresholdValue instanceof Number
+                ? ((Number) pingDisableThresholdValue).intValue()
+                : Integer.parseInt(pingDisableThresholdValue.toString());
 
         Map<String, Object> configChecks = (Map<String, Object>) config.get("checks");
         configChecks.forEach((key, value) -> {
@@ -185,6 +193,11 @@ public class ConfigManager {
         config.put("min-tps", 18.0);
 
         config.put("temp-debug-log", false);
+
+        Map<String, Object> pingDisable = new LinkedHashMap<>();
+        pingDisable.put("enabled", false);
+        pingDisable.put("threshold", 200);
+        config.put("ping-disable", pingDisable);
 
         Map<String, Object> webHook = new LinkedHashMap<>();
         webHook.put("enable", false);
@@ -265,6 +278,14 @@ public class ConfigManager {
 
     public String webHookUrl() {
         return webHookUrl;
+    }
+
+    public boolean pingDisableEnabled() {
+        return pingDisableEnabled;
+    }
+
+    public int pingDisableThreshold() {
+        return pingDisableThreshold;
     }
 
     public Sender sender() {
