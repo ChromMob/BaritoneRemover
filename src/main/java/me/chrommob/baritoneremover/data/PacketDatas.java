@@ -8,12 +8,19 @@ import me.chrommob.baritoneremover.data.types.RotationData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.LongSupplier;
 
 public class PacketDatas {
     private final List<PacketData> packetDatas;
+    private final LongSupplier clock;
 
     public PacketDatas() {
+        this(System::currentTimeMillis);
+    }
+
+    public PacketDatas(LongSupplier clock) {
         packetDatas = new ArrayList<>();
+        this.clock = clock;
     }
 
     public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining,
@@ -23,7 +30,7 @@ public class PacketDatas {
 
     public void add(CheckType checkType, PositionData positionData, RotationData rotationData, boolean mining,
             boolean finishedMining, boolean placedBlock, BlockTargetData blockTargetData) {
-        PacketData packetData = new PacketData(checkType, packetDatas.size(), System.currentTimeMillis(), positionData,
+        PacketData packetData = new PacketData(checkType, packetDatas.size(), clock.getAsLong(), positionData,
                 rotationData, mining, finishedMining, placedBlock, blockTargetData);
         packetDatas.add(packetData);
     }
