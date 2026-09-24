@@ -10,8 +10,9 @@ public final class CanonicalTargeting {
     private static final double MIN_DISTANCE = 1.0;
     private static final double MAX_DISTANCE = 5.25;
     private static final float MIN_TURN = 2.0f;
-    private static final double MAX_MINING_PITCH_ERROR = 0.35;
-    private static final double MAX_MINING_YAW_ERROR = 1.35;
+    // Baritone's default look behavior varies yaw more than pitch while aiming at block centers.
+    private static final double MAX_MINING_PITCH_ERROR = 0.12;
+    private static final double MAX_MINING_YAW_ERROR = 1.2;
     private static final double MIN_MINING_PREVIOUS_ERROR = 3.0;
     private static final float MIN_MINING_TURN = 3.0f;
 
@@ -62,11 +63,13 @@ public final class CanonicalTargeting {
         RotationData expected = new RotationData(expectedPitch, expectedYaw);
         double currentYawError = current.differenceYaw(expected);
         double currentPitchError = current.differencePitch(expected);
+        double previousYawError = previous.differenceYaw(expected);
+        double previousPitchError = previous.differencePitch(expected);
         double currentError = angularError(current, expected);
         double previousError = angularError(previous, expected);
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-        return new Result(currentError, previousError, currentYawError, currentPitchError, distance,
-                current.distance(previous));
+        return new Result(currentError, previousError, currentYawError, currentPitchError, previousYawError,
+                previousPitchError, distance, current.distance(previous), expectedPitch);
     }
 
     private static double angularError(RotationData actual, RotationData expected) {
@@ -78,17 +81,23 @@ public final class CanonicalTargeting {
         private final double previousError;
         private final double currentYawError;
         private final double currentPitchError;
+        private final double previousYawError;
+        private final double previousPitchError;
         private final double distance;
         private final float turn;
+        private final float expectedPitch;
 
         private Result(double currentError, double previousError, double currentYawError, double currentPitchError,
-                double distance, float turn) {
+                double previousYawError, double previousPitchError, double distance, float turn, float expectedPitch) {
             this.currentError = currentError;
             this.previousError = previousError;
             this.currentYawError = currentYawError;
             this.currentPitchError = currentPitchError;
+            this.previousYawError = previousYawError;
+            this.previousPitchError = previousPitchError;
             this.distance = distance;
             this.turn = turn;
+            this.expectedPitch = expectedPitch;
         }
 
         public boolean isCanonicalSnap() {
@@ -99,13 +108,19 @@ public final class CanonicalTargeting {
                     && turn >= MIN_TURN;
         }
 
-        public boolean isBaritoneMiningApproach() {
-            return isBaritoneMiningLock()
+        public boolean isPreciseMiningApproach() {
+            return isPreciseMiningLock()
                     && previousError >= MIN_MINING_PREVIOUS_ERROR
                     && turn >= MIN_MINING_TURN;
         }
 
-        public boolean isBaritoneMiningLock() {
+        public boolean isPreciseMiningHold() {
+            return isPreciseMiningLock()
+                    && previousYawError <= MAX_MINING_YAW_ERROR
+                    && previousPitchError <= MAX_MINING_PITCH_ERROR;
+        }
+
+        private boolean isPreciseMiningLock() {
             return currentYawError <= MAX_MINING_YAW_ERROR
                     && currentPitchError <= MAX_MINING_PITCH_ERROR
                     && distance >= MIN_DISTANCE
@@ -134,6 +149,10 @@ public final class CanonicalTargeting {
 
         public float turn() {
             return turn;
+        }
+
+        public float expectedPitch() {
+            return expectedPitch;
         }
     }
 }
