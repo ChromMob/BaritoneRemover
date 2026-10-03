@@ -32,6 +32,7 @@ public class ConfigManager {
     private Component punishmentMessage;
     private double minTps;
     private boolean tempDebugLog = false;
+    private boolean ignoreBedrockPlayers;
     private boolean webHookEnabled;
     private String webHookUrl;
     private boolean pingDisableEnabled;
@@ -101,6 +102,7 @@ public class ConfigManager {
         saveConfig();
         minTps = config.get("min-tps") instanceof String ? Double.parseDouble((String) config.get("min-tps")) : (Double) config.get("min-tps");
         tempDebugLog = Boolean.TRUE.equals(config.get("temp-debug-log"));
+        ignoreBedrockPlayers = Boolean.TRUE.equals(config.get("ignore-bedrock-players"));
         if (tempDebugLog && debugFile != null) {
             // Mark for deletion when the JVM terminates normally (won't apply on crash)
             debugFile.deleteOnExit();
@@ -194,6 +196,8 @@ public class ConfigManager {
 
         config.put("temp-debug-log", false);
 
+        config.put("ignore-bedrock-players", false);
+
         Map<String, Object> pingDisable = new LinkedHashMap<>();
         pingDisable.put("enabled", false);
         pingDisable.put("threshold", 200);
@@ -286,6 +290,10 @@ public class ConfigManager {
 
     public int pingDisableThreshold() {
         return pingDisableThreshold;
+    }
+
+    public boolean ignoreBedrockPlayers() {
+        return ignoreBedrockPlayers;
     }
 
     public Sender sender() {
