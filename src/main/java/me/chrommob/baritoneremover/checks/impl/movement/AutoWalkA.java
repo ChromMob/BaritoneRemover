@@ -8,6 +8,7 @@ import me.chrommob.baritoneremover.data.types.PacketData;
 import me.chrommob.baritoneremover.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Player;
 
 @CheckData(name = "AutoWalk", identifier = "A", description = "Checks if the player is walking while changing their yaw but not their pitch", checkType = CheckType.FLYING)
 public class AutoWalkA extends Check {
@@ -22,8 +23,8 @@ public class AutoWalkA extends Check {
     @Override
     public void run() {
         // Bedrock players can't move their pitch while in a boat
-        if (playerData.isBedrock() && Bukkit.getPlayer(playerData.name()) != null
-                && Bukkit.getPlayer(playerData.name()).getVehicle() instanceof Boat) {
+        Player player = playerData.isBedrock() ? Bukkit.getPlayer(playerData.name()) : null;
+        if (player != null && player.getVehicle() instanceof Boat) {
             return;
         }
         PacketDatas packetDataList = playerData.packetDataList();

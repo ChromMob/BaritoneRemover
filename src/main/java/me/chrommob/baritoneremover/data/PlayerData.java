@@ -15,6 +15,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerData {
     private final String name;
-    private final boolean isBedrock;
     private final AtomicBoolean debugConsole = new AtomicBoolean(false);
     private final Set<String> debugPlayers = ConcurrentHashMap.newKeySet();
     private boolean isCinematic = false;
@@ -45,8 +45,6 @@ public class PlayerData {
                 e.printStackTrace();
             }
         });
-        isBedrock = ConfigManager.getInstance().floodgateApi() != null
-                && ConfigManager.getInstance().floodgateApi().isFloodgatePlayer(Bukkit.getPlayer(name).getUniqueId());
     }
 
     private final Set<Check> checks = new HashSet<>();
@@ -182,7 +180,10 @@ public class PlayerData {
     }
 
     public boolean isBedrock() {
-        return isBedrock;
+        FloodgateApi floodgateApi = ConfigManager.getInstance().floodgateApi();
+        if (floodgateApi == null) return false;
+        Player player = Bukkit.getPlayer(name);
+        return player != null && floodgateApi.isFloodgatePlayer(player.getUniqueId());
     }
 
     public PacketDatas packetDataList() {
